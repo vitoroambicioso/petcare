@@ -36,3 +36,10 @@ Route::post('/denuncias', [DenunciaController::class, 'getDenuncia'])->name('den
 Route::put('/denuncia/{id}', [DenunciaController::class, 'edit'])->name('denuncia.edit');
 Route::delete('/denuncia/{id}', [DenunciaController::class, 'delete'])->name('denuncia.delete');
 Route::get('/denuncias', [DenunciaController::class, 'getAllDenuncias']);
+
+/**
+ * gerando token CSRF
+ */
+Route::get('/token', function () {
+    return csrf_token(); 
+});
