@@ -13,6 +13,5 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         //
-        'https://backend-petcare.herokuapp.com/usuario'
     ];
 }
