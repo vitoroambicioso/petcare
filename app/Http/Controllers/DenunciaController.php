@@ -53,6 +53,7 @@ class DenunciaController extends Controller
                         $denuncia->bairro = $request->bairro;
                         $denuncia->pontoDeReferencia = $request->pontoDeReferencia;
                         $denuncia->picture = $request->picture;
+                        $denuncia->descricao = $request->descricao;
                         $denuncia->save();
 
                         return response()->json([
@@ -192,6 +193,7 @@ class DenunciaController extends Controller
                             $denuncia->bairro = is_null($request->bairro) ? $denuncia->bairro : $request->bairro;
                             $denuncia->pontoDeReferencia = is_null($request->pontoDeReferencia) ? $denuncia->pontoDeReferencia : $request->pontoDeReferencia;
                             $denuncia->picture = is_null($request->picture) ? $denuncia->picture : $request->picture;
+                            $denuncia->descricao = is_null($request->descricao) ? $denuncia->descricao : $request->descricao;
                             $denuncia->save();
             
                             return response()->json([
