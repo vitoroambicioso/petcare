@@ -116,9 +116,8 @@ class DenunciaController extends Controller
                     if (Denuncia::where('idUsuario', $jwtPayload->id)->exists()) {
                             
                         $denuncia = Denuncia::where('idUsuario', $jwtPayload->id)->get();
-                        return response()->json([
-                            $denuncia,
-                        ], 200);
+                        return response()->json(
+                            $denuncia, 200);
                     } else {
                         return response()->json([
                         "message" => "denuncia not found",
