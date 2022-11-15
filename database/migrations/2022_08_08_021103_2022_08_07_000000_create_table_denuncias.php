@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('bairro');
             $table->string('pontoDeReferencia');
             $table->string('picture');
+            $table->string('descricao');
             $table->timestamps();
         });
 
