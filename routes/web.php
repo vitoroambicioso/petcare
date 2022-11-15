@@ -26,9 +26,9 @@ Route::get('/', function () {
 /**
  * rotas do usuario
  */
-Route::middleware('middlewareGroups')->post('/usuario', [UserController::class, 'create'])->name('user.create');
-Route::middleware('middlewareGroups')->post('/usuario/{id}', [UserController::class, 'getUser'])->name('user.get');
-Route::middleware('middlewareGroups')->put('/usuario/{id}', [UserController::class, 'edit'])->name('user.edit');
+Route::post('/usuario', [UserController::class, 'create'])->name('user.create');
+Route::post('/usuario/{id}', [UserController::class, 'getUser'])->name('user.get');
+Route::put('/usuario/{id}', [UserController::class, 'edit'])->name('user.edit');
 Route::delete('/usuario/{id}', [UserController::class, 'delete'])->name('user.delete');
 Route::get('/usuarios', [UserController::class, 'getAllUsers']);
 Route::post('/login', [UserController::class, 'login'])->name('user.login');
