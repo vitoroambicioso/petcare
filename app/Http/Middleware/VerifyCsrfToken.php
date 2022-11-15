@@ -12,6 +12,9 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        'https://pet-care-front-end.vercel.app/Registro'
+        /**
+         * 'https://pet-care-front-end.vercel.app/Registro'
+         */
+        '/usuario/user.create'
     ];
 }
