@@ -160,15 +160,29 @@ class UserController extends Controller
                 case 1:
                     if($jwtPayload->id == $id) {
 
-                        $user = User::find($id);
-                        $user->name = is_null($request->name) ? $User->name : $request->name;
-                        $user->password = bcrypt(is_null($request->password) ? $User->password : $request->password);
-                        $user->update();
-                                
-                        return response()->json([
-                            "token" => "$request->token",
-                            "message" => "records updated successfully"
-                        ], 200);
+                        if(isset($request->newPaswword)){
+                            
+                            $user = User::find($id);
+                            $user->name = is_null($request->name) ? $User->name : $request->name;
+                            $user->password = bcrypt(is_null($request->newPassword) ? $User->password : $request->newPassword);
+                            $user->update();
+                                    
+                            return response()->json([
+                                "token" => "$request->token",
+                                "message" => "records updated successfully"
+                            ], 200);
+                        } else {
+                            $user = User::find($id);
+                            $user->name = is_null($request->name) ? $User->name : $request->name;
+                            $user->password = bcrypt(is_null($request->password) ? $User->password : $request->password);
+                            $user->update();
+                                    
+                            return response()->json([
+                                "token" => "$request->token",
+                                "message" => "records updated successfully"
+                            ], 200);
+                        }
+
                     } else {
                         return response()->json([
                             "message" => "id not found"
