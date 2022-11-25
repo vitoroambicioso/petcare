@@ -174,7 +174,11 @@ class UserController extends Controller
                                     "token" => "$request->token",
                                     "message" => "records updated successfully with new passowrd"
                                 ], 200);
-                            }  
+                            } else {
+                                return response()->json([
+                                    "message" => "login attempt failed"
+                                ], 404);
+                            }
                         } else {
 
                             $credentials = $request->only('email', 'password');
@@ -189,6 +193,10 @@ class UserController extends Controller
                                     "token" => "$request->token",
                                     "message" => "records updated successfully old password"
                                 ], 200);
+                            } else {
+                                return response()->json([
+                                    "message" => "login attempt failed"
+                                ], 404);
                             }
                         }
 
