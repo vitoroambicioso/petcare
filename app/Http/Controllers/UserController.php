@@ -160,7 +160,7 @@ class UserController extends Controller
                 case 1:
                     if($jwtPayload->id == $id) {
 
-                        if(isset($request->newPaswword)){
+                        if(isset($request->newPassword)){
                             
                             $credentials = $request->only('email', 'password');
                             
