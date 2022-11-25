@@ -172,7 +172,7 @@ class UserController extends Controller
                                         
                                 return response()->json([
                                     "token" => "$request->token",
-                                    "message" => "records updated successfully"
+                                    "message" => "records updated successfully with new passowrd"
                                 ], 200);
                             }  
                         } else {
@@ -187,7 +187,7 @@ class UserController extends Controller
                                         
                                 return response()->json([
                                     "token" => "$request->token",
-                                    "message" => "records updated successfully"
+                                    "message" => "records updated successfully old password"
                                 ], 200);
                             }
                         }
