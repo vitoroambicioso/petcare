@@ -234,7 +234,6 @@ class UserController extends Controller
             ], 400);
         }
     }
-    
 
     /**
      * Remove the specified resource from storage.
@@ -334,7 +333,8 @@ class UserController extends Controller
                 $jwtSignature = base64_encode($jwtSignature);
 
                 $token = "$jwtHeader.$jwtPayload.$jwtSignature";
-                $user = $this->getUser($token, Auth::user()->id);
+                $requestGet = $_REQUEST[$token];
+                $user = $this->getUser($requestGet, Auth::user()->id);
 
                 return response()->json([
                     "token" => $token,
