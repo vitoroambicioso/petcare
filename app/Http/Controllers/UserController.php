@@ -333,7 +333,9 @@ class UserController extends Controller
                 $jwtSignature = base64_encode($jwtSignature);
 
                 $token = "$jwtHeader.$jwtPayload.$jwtSignature";
-                $requestGet = $_REQUEST[$token];
+                $requestGet = [
+                    'token' => $_REQUEST[$token]
+                ];
                 $user = $this->getUser($requestGet, Auth::user()->id);
 
                 return response()->json([
