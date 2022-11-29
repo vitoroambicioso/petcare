@@ -334,7 +334,7 @@ class UserController extends Controller
 
                 $token = "$jwtHeader.$jwtPayload.$jwtSignature";
                 $requestGet = [
-                    'token' => $_REQUEST[$token]
+                    'token' => $token
                 ];
                 $user = $this->getUser($requestGet, Auth::user()->id);
 
