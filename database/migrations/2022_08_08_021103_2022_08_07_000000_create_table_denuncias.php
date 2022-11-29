@@ -24,8 +24,8 @@ return new class extends Migration
             $table->string('bairro');
             $table->string('pontoDeReferencia');
             $table->longText('picture1');
-            $table->longText('picture2');
-            $table->longText('picture3');
+            $table->longText('picture2')->nullable();
+            $table->longText('picture3')->nullable();
             $table->string('descricao');
             $table->timestamps();
         });
