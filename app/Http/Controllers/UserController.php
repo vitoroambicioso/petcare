@@ -41,28 +41,16 @@ class UserController extends Controller
         if(!empty($request->all())) {
             
             if(User::where('email', $request->email)->exists() == FALSE) {
-                if(isset($request->photo)){
-                    $user = new User;
-                    $user->name = $request->name;
-                    $user->email = $request->email;
-                    $user->photo = $request->photo;
-                    $user->password = bcrypt($request->password);
-                    $user->save();
+                $user = new User;
+                $user->name = $request->name;
+                $user->email = $request->email;
+                $user->photo = $request->photo;
+                $user->password = bcrypt($request->password);
+                $user->save();
 
-                    return response()->json([
-                        "message" => "user record created"
-                    ], 201);
-                } else {
-                    $user = new User;
-                    $user->name = $request->name;
-                    $user->email = $request->email;
-                    $user->password = bcrypt($request->password);
-                    $user->save();
-
-                    return response()->json([
-                        "message" => "user record created"
-                    ], 201);
-                }
+                return response()->json([
+                    "message" => "user record created"
+                ], 201);
             } else {
                 return response()->json([
                     "message" => "user already exists"
