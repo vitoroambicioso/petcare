@@ -333,6 +333,8 @@ class UserController extends Controller
                 $jwtSignature = hash_hmac('sha256',"$jwtHeader.$jwtPayload", getenv('JWT_KEY'),true);
                 $jwtSignature = base64_encode($jwtSignature);
 
+                $user = getUser($request, $jwtPayload->id);
+
                 return response()->json([
                     "token" => "$jwtHeader.$jwtPayload.$jwtSignature",
                     "photo" => $user->photo,
