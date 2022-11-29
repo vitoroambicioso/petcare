@@ -335,7 +335,7 @@ class UserController extends Controller
                 $token = "$jwtHeader.$jwtPayload.$jwtSignature";
 
                 $user = $this->getUserNoRqt(Auth::user()->id);
-
+                
                 return response()->json([
                     "token" => $token,
                     "photo" => $user->photo,
@@ -362,7 +362,7 @@ class UserController extends Controller
             $user = User::find($id);
 
             return response()->json([
-                "user" => $user,
+                $user
             ]);
         }
     }
