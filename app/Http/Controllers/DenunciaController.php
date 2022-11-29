@@ -57,6 +57,11 @@ class DenunciaController extends Controller
                             $denuncia->picture2 = $request->picture2;
                             $denuncia->descricao = $request->descricao;
                             $denuncia->save();
+
+                            return response()->json([
+                                $denuncia,
+                                "message" => "denuncia record created"
+                            ], 201);
                         }
 
                         else if(isset($request->picture3)) {
@@ -73,6 +78,11 @@ class DenunciaController extends Controller
                             $denuncia->picture3 = $request->picture3;
                             $denuncia->descricao = $request->descricao;
                             $denuncia->save();
+
+                            return response()->json([
+                                $denuncia,
+                                "message" => "denuncia record created"
+                            ], 201);
                         } else {
                             $denuncia = new Denuncia;
                             $denuncia->idUsuario = $jwtPayload->id;
@@ -85,12 +95,12 @@ class DenunciaController extends Controller
                             $denuncia->picture1 = $request->picture1;
                             $denuncia->descricao = $request->descricao;
                             $denuncia->save();
+
+                            return response()->json([
+                                $denuncia,
+                                "message" => "denuncia record created"
+                            ], 201);
                         }
-                        
-                        return response()->json([
-                            $denuncia,
-                            "message" => "denuncia record created"
-                        ], 201);
                         break;
                     case 2:
                         return response()->json([

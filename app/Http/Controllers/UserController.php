@@ -48,6 +48,10 @@ class UserController extends Controller
                     $user->photo = $request->photo;
                     $user->password = bcrypt($request->password);
                     $user->save();
+
+                    return response()->json([
+                        "message" => "user record created"
+                    ], 201);
                 } else {
                     $user = new User;
                     $user->name = $request->name;
