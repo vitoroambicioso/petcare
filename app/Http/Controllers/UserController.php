@@ -333,10 +333,11 @@ class UserController extends Controller
                 $jwtSignature = hash_hmac('sha256',"$jwtHeader.$jwtPayload", getenv('JWT_KEY'),true);
                 $jwtSignature = base64_encode($jwtSignature);
 
-                $user = $this->getUser($request, Auth::user()->id);
+                $token = "$jwtHeader.$jwtPayload.$jwtSignature";
+                $user = $this->getUser($token, Auth::user()->id);
 
                 return response()->json([
-                    "token" => "$jwtHeader.$jwtPayload.$jwtSignature",
+                    "token" => $token,
                     "photo" => $user->photo,
                     "message" => "successfully logged in"
                 ], 200);
