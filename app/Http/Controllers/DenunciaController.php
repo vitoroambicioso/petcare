@@ -44,18 +44,49 @@ class DenunciaController extends Controller
 
                     case 1:
 
-                        $denuncia = new Denuncia;
-                        $denuncia->idUsuario = $jwtPayload->id;
-                        $denuncia->tipo = $request->tipo;
-                        $denuncia->cor = $request->cor;
-                        $denuncia->localizacao = $request->localizacao;
-                        $denuncia->rua = $request->rua;
-                        $denuncia->bairro = $request->bairro;
-                        $denuncia->pontoDeReferencia = $request->pontoDeReferencia;
-                        $denuncia->picture = $request->picture;
-                        $denuncia->descricao = $request->descricao;
-                        $denuncia->save();
+                        if(isset($request->picture2)) {
+                            $denuncia = new Denuncia;
+                            $denuncia->idUsuario = $jwtPayload->id;
+                            $denuncia->tipo = $request->tipo;
+                            $denuncia->cor = $request->cor;
+                            $denuncia->localizacao = $request->localizacao;
+                            $denuncia->rua = $request->rua;
+                            $denuncia->bairro = $request->bairro;
+                            $denuncia->pontoDeReferencia = $request->pontoDeReferencia;
+                            $denuncia->picture1 = $request->picture1;
+                            $denuncia->picture2 = $request->picture2;
+                            $denuncia->descricao = $request->descricao;
+                            $denuncia->save();
+                        }
 
+                        else if(isset($request->picture3)) {
+                            $denuncia = new Denuncia;
+                            $denuncia->idUsuario = $jwtPayload->id;
+                            $denuncia->tipo = $request->tipo;
+                            $denuncia->cor = $request->cor;
+                            $denuncia->localizacao = $request->localizacao;
+                            $denuncia->rua = $request->rua;
+                            $denuncia->bairro = $request->bairro;
+                            $denuncia->pontoDeReferencia = $request->pontoDeReferencia;
+                            $denuncia->picture1 = $request->picture1;
+                            $denuncia->picture2 = $request->picture2;
+                            $denuncia->picture3 = $request->picture3;
+                            $denuncia->descricao = $request->descricao;
+                            $denuncia->save();
+                        } else {
+                            $denuncia = new Denuncia;
+                            $denuncia->idUsuario = $jwtPayload->id;
+                            $denuncia->tipo = $request->tipo;
+                            $denuncia->cor = $request->cor;
+                            $denuncia->localizacao = $request->localizacao;
+                            $denuncia->rua = $request->rua;
+                            $denuncia->bairro = $request->bairro;
+                            $denuncia->pontoDeReferencia = $request->pontoDeReferencia;
+                            $denuncia->picture1 = $request->picture1;
+                            $denuncia->descricao = $request->descricao;
+                            $denuncia->save();
+                        }
+                        
                         return response()->json([
                             $denuncia,
                             "message" => "denuncia record created"
@@ -114,7 +145,7 @@ class DenunciaController extends Controller
                 case 1:
             
                     if (Denuncia::where('idUsuario', $jwtPayload->id)->exists()) {
-                            
+                        
                         $denuncia = Denuncia::where('idUsuario', $jwtPayload->id)->get();
                         return response()->json(
                             $denuncia, 200);

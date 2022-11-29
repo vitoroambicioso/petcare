@@ -22,7 +22,9 @@ class DenunciaFactory extends Factory
             'rua' => fake()->locale(),
             'bairro' => fake()->locale(),
             'pontoDeReferencia' => fake()->locale(),
-            'picture' => fake()->name().'.png',
+            'picture1' => fake()->name().'.png',
+            'picture2' => fake()->name().'.png',
+            'picture3' => fake()->name().'.png',
             'descricao' => fake()->name().'machucado'
         ];
     }

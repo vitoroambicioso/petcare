@@ -23,7 +23,9 @@ return new class extends Migration
             $table->string('rua');
             $table->string('bairro');
             $table->string('pontoDeReferencia');
-            $table->longText('picture');
+            $table->longText('picture1');
+            $table->longText('picture2');
+            $table->longText('picture3');
             $table->string('descricao');
             $table->timestamps();
         });

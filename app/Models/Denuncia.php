@@ -23,6 +23,8 @@ class Denuncia extends Model
         'rua',
         'bairro',
         'pontoDeReferencia',
-        'picture'
+        'picture1',
+        'picture2',
+        'picture3'
     ];
 }
