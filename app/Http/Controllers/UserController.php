@@ -335,6 +335,7 @@ class UserController extends Controller
 
                 return response()->json([
                     "token" => "$jwtHeader.$jwtPayload.$jwtSignature",
+                    "photo" => $user->photo,
                     "message" => "successfully logged in"
                 ], 200);
             } else {
