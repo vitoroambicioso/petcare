@@ -44,7 +44,7 @@ class DenunciaController extends Controller
 
                     case 1:
 
-                        if(isset($request->picture2)) {
+                        if(isset($request->picture2) == TRUE && isset($request->picture3) == FALSE) {
                             $denuncia = new Denuncia;
                             $denuncia->idUsuario = $jwtPayload->id;
                             $denuncia->tipo = $request->tipo;
