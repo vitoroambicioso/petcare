@@ -334,11 +334,7 @@ class UserController extends Controller
 
                 $token = "$jwtHeader.$jwtPayload.$jwtSignature";
 
-                $requestGet->json([
-                    "token" => $token
-                ]);
-
-                $user = $this->getUser($requestGet, Auth::user()->id);
+                $user = $this->getUserNoRqt(Auth::user()->id);
 
                 return response()->json([
                     "token" => $token,
@@ -355,6 +351,19 @@ class UserController extends Controller
                 "message" => "bad request"
             ], 400);
         }
+    }
+
+    /**
+     * funcao get sem request
+     */
+    public function getUserNoRqt($id)
+    {
+        if (User::where('id', $id)->exists()) {
+        $user = User::find($id);
+
+        return response()->json([
+            "user" => $user,
+        ]);
     }
     
     /**
