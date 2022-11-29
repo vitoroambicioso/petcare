@@ -359,11 +359,12 @@ class UserController extends Controller
     public function getUserNoRqt($id)
     {
         if (User::where('id', $id)->exists()) {
-        $user = User::find($id);
+            $user = User::find($id);
 
-        return response()->json([
-            "user" => $user,
-        ]);
+            return response()->json([
+                "user" => $user,
+            ]);
+        }
     }
     
     /**
