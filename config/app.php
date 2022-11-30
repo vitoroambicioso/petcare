@@ -68,7 +68,7 @@ return [
     | ahead and set this to a sensible default for you out of the box.
     |
     */
-    date_default_timezone_set('America/Recife'),
+    
     'timezone' => ('America/Recife'),
 
     /*
