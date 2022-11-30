@@ -338,7 +338,7 @@ class UserController extends Controller
                 
                 return response()->json([
                     "token" => $token,
-                    "photo" => $user,
+                    "photo" => $user->photo,
                     "message" => "successfully logged in"
                 ], 200);
             } else {
