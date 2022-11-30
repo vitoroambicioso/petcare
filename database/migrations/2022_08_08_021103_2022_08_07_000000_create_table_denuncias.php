@@ -27,8 +27,8 @@ return new class extends Migration
             $table->longText('picture2')->nullable();
             $table->longText('picture3')->nullable();
             $table->string('descricao');
-            $table->varchar('created_at');
-            $table->varchar('updated_at');
+            $table->string('created_at');
+            $table->string('updated_at');
         });
 
         Schema::table('denuncias', function (Blueprint $table) {
