@@ -361,9 +361,7 @@ class UserController extends Controller
         if (User::where('id', $id)->exists()) {
             $user = User::find($id);
 
-            return response()->json([
-                $user
-            ]);
+            return $user;
         }
     }
     
