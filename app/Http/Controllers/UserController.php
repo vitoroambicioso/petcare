@@ -46,6 +46,9 @@ class UserController extends Controller
                 $user->email = $request->email;
                 $user->photo = $request->photo;
                 $user->password = bcrypt($request->password);
+                date_default_timezone_set('America/Recife');
+                $user->created_at = time();
+                $user->updated_at = time();
                 $user->save();
 
                 return response()->json([
@@ -191,7 +194,7 @@ class UserController extends Controller
                                 $user->photo = is_null($request->photo) ? $User->photo : $request->photo;
                                 $user->password = bcrypt(is_null($request->password) ? $User->password : $request->password);
                                 $user->update();
-                                        
+                                
                                 return response()->json([
                                     "token" => "$request->token",
                                     "message" => "records updated successfully old password"
