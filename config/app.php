@@ -68,8 +68,8 @@ return [
     | ahead and set this to a sensible default for you out of the box.
     |
     */
-
-    'timezone' => 'America/Sao_Paulo',
+    date_default_timezone_set('America/Recife'),
+    'timezone' => ('America/Recife'),
 
     /*
     |--------------------------------------------------------------------------
