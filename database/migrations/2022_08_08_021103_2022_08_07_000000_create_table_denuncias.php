@@ -5,6 +5,11 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Models\User;
 
+/**
+* Set timezone
+*/
+date_default_timezone_set('America/Recife');
+
 return new class extends Migration
 {
     /**
