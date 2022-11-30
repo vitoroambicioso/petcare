@@ -11,7 +11,8 @@ use Carbon\Carbon;
 /**
 * Set timezone
 */
-date_default_timezone_set('America/Recife');
+/*
+date_default_timezone_set('America/Recife');*/
 
 class DenunciaController extends Controller
 {
