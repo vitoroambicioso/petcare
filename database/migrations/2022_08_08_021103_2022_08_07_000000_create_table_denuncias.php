@@ -5,11 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Models\User;
 
-/**
-* Set timezone
-*/
-date_default_timezone_set('America/Recife');
-
 return new class extends Migration
 {
     /**
@@ -32,7 +27,8 @@ return new class extends Migration
             $table->longText('picture2')->nullable();
             $table->longText('picture3')->nullable();
             $table->string('descricao');
-            $table->timestamps();
+            $table->string('created_at');
+            $table->string('updated_at');
         });
 
         Schema::table('denuncias', function (Blueprint $table) {
