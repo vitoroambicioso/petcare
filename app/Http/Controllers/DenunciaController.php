@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Carbon\Carbon;
 
+/**
+* Set timezone
+*/
+date_default_timezone_set('America/Recife');
+
 class DenunciaController extends Controller
 {
     /**
@@ -39,7 +44,6 @@ class DenunciaController extends Controller
                 $jwtPayload = json_decode($tokenPayload);
 
                 $tokenValid = $this->validacaoJwt($request);
-
                 switch($tokenValid) {
 
                     case 1:
@@ -56,7 +60,6 @@ class DenunciaController extends Controller
                             $denuncia->picture1 = $request->picture1;
                             $denuncia->picture2 = $request->picture2;
                             $denuncia->descricao = $request->descricao;
-                            date_default_timezone_set('America/Recife');
                             $denuncia->created_at = time();
                             $denuncia->updated_at = time();
                             $denuncia->save();
@@ -80,7 +83,6 @@ class DenunciaController extends Controller
                             $denuncia->picture2 = $request->picture2;
                             $denuncia->picture3 = $request->picture3;
                             $denuncia->descricao = $request->descricao;
-                            date_default_timezone_set('America/Recife');
                             $denuncia->created_at = time();
                             $denuncia->updated_at = time();
                             $denuncia->save();
@@ -100,7 +102,6 @@ class DenunciaController extends Controller
                             $denuncia->pontoDeReferencia = $request->pontoDeReferencia;
                             $denuncia->picture1 = $request->picture1;
                             $denuncia->descricao = $request->descricao;
-                            date_default_timezone_set('America/Recife');
                             $denuncia->created_at = time();
                             $denuncia->updated_at = time();
                             $denuncia->save();
@@ -242,6 +243,7 @@ class DenunciaController extends Controller
                             $denuncia->bairro = is_null($request->bairro) ? $denuncia->bairro : $request->bairro;
                             $denuncia->pontoDeReferencia = is_null($request->pontoDeReferencia) ? $denuncia->pontoDeReferencia : $request->pontoDeReferencia;
                             $denuncia->descricao = is_null($request->descricao) ? $denuncia->descricao : $request->descricao;
+                            $denuncia->updated_at = time();
                             $denuncia->update();
             
                             return response()->json([
