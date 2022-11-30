@@ -56,6 +56,9 @@ class DenunciaController extends Controller
                             $denuncia->picture1 = $request->picture1;
                             $denuncia->picture2 = $request->picture2;
                             $denuncia->descricao = $request->descricao;
+                            date_default_timezone_set('America/Recife');
+                            $denuncia->created_at = time();
+                            $denuncia->updated_at = time();
                             $denuncia->save();
 
                             return response()->json([
@@ -77,6 +80,9 @@ class DenunciaController extends Controller
                             $denuncia->picture2 = $request->picture2;
                             $denuncia->picture3 = $request->picture3;
                             $denuncia->descricao = $request->descricao;
+                            date_default_timezone_set('America/Recife');
+                            $denuncia->created_at = time();
+                            $denuncia->updated_at = time();
                             $denuncia->save();
 
                             return response()->json([
@@ -94,6 +100,9 @@ class DenunciaController extends Controller
                             $denuncia->pontoDeReferencia = $request->pontoDeReferencia;
                             $denuncia->picture1 = $request->picture1;
                             $denuncia->descricao = $request->descricao;
+                            date_default_timezone_set('America/Recife');
+                            $denuncia->created_at = time();
+                            $denuncia->updated_at = time();
                             $denuncia->save();
 
                             return response()->json([
