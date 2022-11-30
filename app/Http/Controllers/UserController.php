@@ -171,7 +171,7 @@ class UserController extends Controller
                                 $user->photo = is_null($request->photo) ? $User->photo : $request->photo;
                                 $user->password = bcrypt(is_null($request->newPassword) ? $User->password : $request->newPassword);
                                 $user->update();
-                                        
+                                
                                 return response()->json([
                                     "token" => "$request->token",
                                     "message" => "records updated successfully with new passowrd"
@@ -188,6 +188,7 @@ class UserController extends Controller
                             if (Auth::attempt($credentials)) {
                                 $user = User::find($id);
                                 $user->name = is_null($request->name) ? $User->name : $request->name;
+                                $user->photo = is_null($request->photo) ? $User->photo : $request->photo;
                                 $user->password = bcrypt(is_null($request->password) ? $User->password : $request->password);
                                 $user->update();
                                         
