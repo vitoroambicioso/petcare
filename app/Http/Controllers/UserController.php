@@ -333,12 +333,12 @@ class UserController extends Controller
                 $jwtSignature = base64_encode($jwtSignature);
 
                 $token = "$jwtHeader.$jwtPayload.$jwtSignature";
-
+                
                 $user = $this->getUserNoRqt(Auth::user()->id);
                 
                 return response()->json([
                     "token" => $token,
-                    "photo" => $user->photo,
+                    "photo" => $user,
                     "message" => "successfully logged in"
                 ], 200);
             } else {
