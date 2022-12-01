@@ -8,6 +8,8 @@ use Auth;
 use Session;
 use Carbon\Carbon;
 
+date_default_timezone_set('UTC');
+
 class UserController extends Controller
 {
     /**
@@ -45,6 +47,8 @@ class UserController extends Controller
                 $user->name = $request->name;
                 $user->email = $request->email;
                 $user->photo = $request->photo;
+                $user->created_at = time();
+                $user->updated_at = time();
                 $user->password = bcrypt($request->password);
                 $user->save();
 
