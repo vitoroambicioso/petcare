@@ -16,14 +16,14 @@ class Cors
      */
     public function handle(Request $request, Closure $next)
     {
-        /*return $next($request)
+        return $next($request)
         ->header('Access-Control-Allow-Origin', '*')
         ->header('Access-Control-Allow-Methods', 'PUT, POST, DELETE, GET, OPTIONS')
         ->header('Access-Control-Allow-Headers', 'Accept, Authorization, Content-Type, X-CSRF-TOKEN, XMLHtppRequest');
-        */$response = $next($request);
+        /*$response = $next($request);
         $response->header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PUT, DELETE');
         $response->header('Access-Control-Allow-Headers', $request->header('Access-Control-Request-Headers'));
         $response->header('Access-Control-Allow-Origin', '*');
-        return $response;
+        return $response;*/
     }
 }
