@@ -56,7 +56,7 @@ class UserController extends Controller
 
                     return response()->json([
                         "message" => "user record created",
-                        $validateEmail
+                        "valid email" => $validateEmail
                     ], 201);
                 } else {
                     return response()->json([
