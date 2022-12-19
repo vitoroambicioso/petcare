@@ -123,6 +123,11 @@ class UserController extends Controller
                         "message" => "token does not exist"
                     ], 403);
                     break;
+                case 6:
+                    return response()->json([
+                        "message" => "user not found"
+                    ], 404);
+                    break;
             }
         } else {
             return response()->json([
@@ -173,7 +178,6 @@ class UserController extends Controller
                                 $user->update();
                                 
                                 return response()->json([
-                                    "token" => "$request->token",
                                     "message" => "records updated successfully with new passowrd"
                                 ], 200);
                             } else {
@@ -193,8 +197,7 @@ class UserController extends Controller
                                 $user->update();
                                 
                                 return response()->json([
-                                    "token" => "$request->token",
-                                    "message" => "records updated successfully old password"
+                                    "message" => "records updated successfully with old password"
                                 ], 200);
                             } else {
                                 return response()->json([
@@ -228,6 +231,11 @@ class UserController extends Controller
                     return response()->json([
                         "message" => "token does not exist"
                     ], 403);
+                    break;
+                case 6:
+                    return response()->json([
+                        "message" => "user not found"
+                    ], 404);
                     break;
             }
         } else {
@@ -405,7 +413,11 @@ class UserController extends Controller
                          * verifica signature do token
                          */
                         if($tokenSignature == $jwtSignatureValid) {
-                           return 1;
+                           if(User::find($jwtPayload->id)) {
+                                return 1;
+                           } else {
+                                return 6;
+                           }
                         } else {
                             return 3;
                         }
@@ -423,3 +435,4 @@ class UserController extends Controller
         }
     }
 }
+
