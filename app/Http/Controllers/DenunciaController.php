@@ -227,7 +227,6 @@ class DenunciaController extends Controller
 
                             $denuncia->tipo = is_null($request->tipo) ? $denuncia->tipo : $request->tipo;
                             $denuncia->cor = is_null($request->cor) ? $denuncia->cor : $request->cor;
-                            $denuncia->localizacao = is_null($request->localizacao) ? $denuncia->localizacao : $request->localizacao;
                             $denuncia->rua = is_null($request->rua) ? $denuncia->rua : $request->rua;
                             $denuncia->bairro = is_null($request->bairro) ? $denuncia->bairro : $request->bairro;
                             $denuncia->pontoDeReferencia = is_null($request->pontoDeReferencia) ? $denuncia->pontoDeReferencia : $request->pontoDeReferencia;
