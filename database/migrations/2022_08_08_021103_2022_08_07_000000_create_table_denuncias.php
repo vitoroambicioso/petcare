@@ -19,7 +19,6 @@ return new class extends Migration
             $table->id();
             $table->string('tipo');
             $table->string('cor');
-            $table->string('localizacao');
             $table->string('rua');
             $table->string('bairro');
             $table->string('pontoDeReferencia');
