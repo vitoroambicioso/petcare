@@ -48,7 +48,6 @@ class DenunciaController extends Controller
                             $denuncia->idUsuario = $jwtPayload->id;
                             $denuncia->tipo = $request->tipo;
                             $denuncia->cor = $request->cor;
-                            $denuncia->localizacao = $request->localizacao;
                             $denuncia->rua = $request->rua;
                             $denuncia->bairro = $request->bairro;
                             $denuncia->pontoDeReferencia = $request->pontoDeReferencia;
@@ -68,7 +67,6 @@ class DenunciaController extends Controller
                             $denuncia->idUsuario = $jwtPayload->id;
                             $denuncia->tipo = $request->tipo;
                             $denuncia->cor = $request->cor;
-                            $denuncia->localizacao = $request->localizacao;
                             $denuncia->rua = $request->rua;
                             $denuncia->bairro = $request->bairro;
                             $denuncia->pontoDeReferencia = $request->pontoDeReferencia;
@@ -87,7 +85,6 @@ class DenunciaController extends Controller
                             $denuncia->idUsuario = $jwtPayload->id;
                             $denuncia->tipo = $request->tipo;
                             $denuncia->cor = $request->cor;
-                            $denuncia->localizacao = $request->localizacao;
                             $denuncia->rua = $request->rua;
                             $denuncia->bairro = $request->bairro;
                             $denuncia->pontoDeReferencia = $request->pontoDeReferencia;
