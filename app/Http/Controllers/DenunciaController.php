@@ -118,6 +118,11 @@ class DenunciaController extends Controller
                             "message" => "token does not exist"
                         ], 403);
                         break;
+                    case 6:
+                        return response()->json([
+                            "message" => "user not found"
+                        ], 404);
+                        break;
                 }
             } else {
                 return response()->json([
@@ -180,6 +185,11 @@ class DenunciaController extends Controller
                     return response()->json([
                         "message" => "token does not exist"
                     ], 403);
+                    break;
+                case 6:
+                    return response()->json([
+                        "message" => "user not found"
+                    ], 404);
                     break;
             }
         } else {
@@ -265,6 +275,11 @@ class DenunciaController extends Controller
                         "message" => "token does not exist"
                     ], 403);
                     break;
+                case 6:
+                    return response()->json([
+                        "message" => "user not found"
+                    ], 404);
+                    break;
             }
         } else {
             return response()->json([
@@ -335,6 +350,11 @@ class DenunciaController extends Controller
                         "message" => "token does not exist"
                     ], 403);
                     break;
+                case 6:
+                    return response()->json([
+                        "message" => "user not found"
+                    ], 404);
+                    break;
             }
         } else {
             return response()->json([
@@ -382,7 +402,11 @@ class DenunciaController extends Controller
                          * verifica signature do token
                          */
                         if($tokenSignature == $jwtSignatureValid) {
-                           return 1;
+                           if(User::find($jwtPayload->id)) {
+                                return 1;
+                           } else {
+                                return 6;
+                           }
                         } else {
                             return 3;
                         }
