@@ -18,7 +18,6 @@ class DenunciaFactory extends Factory
             'idUsuario' => '1',
             'tipo' => fake()->name(),
             'cor' => 'caramelo',
-            'localizacao' => fake()->locale(),
             'rua' => fake()->locale(),
             'bairro' => fake()->locale(),
             'pontoDeReferencia' => fake()->locale(),
