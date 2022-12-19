@@ -19,7 +19,6 @@ class Denuncia extends Model
         'idUsuario',
         'tipo',
         'cor',
-        'localizacao',
         'rua',
         'bairro',
         'pontoDeReferencia',
