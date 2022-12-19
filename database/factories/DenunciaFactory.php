@@ -15,7 +15,7 @@ class DenunciaFactory extends Factory
     public function definition()
     {
         return [
-            'idUsuario' => '1',
+            'idUsuario' => '34',
             'tipo' => fake()->name(),
             'cor' => 'caramelo',
             'rua' => fake()->locale(),
