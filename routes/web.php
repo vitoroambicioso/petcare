@@ -45,12 +45,12 @@ Route::get('/denuncias', [DenunciaController::class, 'getAllDenuncias']);
 /**
  * rotas do usuario
  */
-Route::post('/admin', [UserController::class, 'create'])->name('admin.create');
-Route::post('/admin/{id}', [UserController::class, 'getAdmin'])->name('admin.get');
-Route::put('/admin/{id}', [UserController::class, 'edit'])->name('admin.edit');
-Route::delete('/admin/{id}', [UserController::class, 'delete'])->name('admin.delete');
-Route::get('/admins', [UserController::class, 'getAllAdmin']);
-Route::post('/admin/login', [UserController::class, 'login'])->name('admin.login');
+Route::post('/admin', [AdminController::class, 'create'])->name('admin.create');
+Route::post('/admin/{id}', [AdminController::class, 'getAdmin'])->name('admin.get');
+Route::put('/admin/{id}', [AdminController::class, 'edit'])->name('admin.edit');
+Route::delete('/admin/{id}', [AdminController::class, 'delete'])->name('admin.delete');
+Route::get('/admins', [AdminController::class, 'getAllAdmin']);
+Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login');
 
 /**
  * gerando token CSRF 
