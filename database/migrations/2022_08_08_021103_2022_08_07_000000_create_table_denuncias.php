@@ -17,6 +17,7 @@ return new class extends Migration
         Schema::create('denuncias', function (Blueprint $table) {
             $table->unsignedBigInteger('idUsuario');
             $table->id();
+            $table->string('admin')->nullable();
             $table->string('tipo');
             $table->string('cor');
             $table->string('rua');
@@ -30,7 +31,7 @@ return new class extends Migration
         });
 
         Schema::table('denuncias', function (Blueprint $table) {
-            $table->foreign('idUsuario')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('idUsuario')->references('id')->on('users');
         });
     }
 
