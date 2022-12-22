@@ -43,7 +43,17 @@ Route::delete('/denuncia/{id}', [DenunciaController::class, 'delete'])->name('de
 Route::get('/denuncias', [DenunciaController::class, 'getAllDenuncias']);
 
 /**
- * gerando token CSRF
+ * rotas do usuario
+ */
+Route::post('/admin', [UserController::class, 'create'])->name('admin.create');
+Route::post('/admin/{id}', [UserController::class, 'getAdmin'])->name('admin.get');
+Route::put('/admin/{id}', [UserController::class, 'edit'])->name('admin.edit');
+Route::delete('/admin/{id}', [UserController::class, 'delete'])->name('admin.delete');
+Route::get('/admins', [UserController::class, 'getAllAdmin']);
+Route::post('/admin/login', [UserController::class, 'login'])->name('admin.login');
+
+/**
+ * gerando token CSRF 
  */
 Route::get('/token', function () {
     return csrf_token(); 

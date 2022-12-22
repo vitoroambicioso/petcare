@@ -3,34 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
-use Auth;
-use Session;
-use Carbon\Carbon;
 
-class UserController extends Controller
+class AdminController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    /*public function create()
-    {
-        //
-    }
-    */
-    /**
+     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -38,30 +14,35 @@ class UserController extends Controller
      */
     public function create(Request $request)
     {
-        if(!empty($request->all())) {
-            
-            if(User::where('email', $request->email)->exists() == FALSE) {
-                $user = new User;
-                $user->name = $request->name;
-                $user->email = $request->email;
-                $user->photo = $request->photo;
-                $user->password = bcrypt($request->password);
-                $user->save();
 
-                return response()->json([
-                    "message" => "user record created"
-                ], 201);
+        if(!empty($request->all())) {
+
+            if(isset($request->admin) && !is_null($request->admin)) {
+                $adminKey = $request->admin;
+                if($adminKey == getenv('ADMIN_KEY')) {
+                    $admin = new Admin;
+                    $admin->name = $request->name;
+                    $admin->email = $request->email;
+                    $admin->photo = $request->photo;
+                    $admin->password = bcrypt($request->password);
+                    $admin->save();
+
+                    return response()->json([
+                        "message" => "admin record created"
+                    ], 201); 
+                } else {
+                    return response()->json([
+                        "message" => "access denied by admin key wrong"
+                    ], 403);
+                }
             } else {
-                return response()->json([
-                    "message" => "user already exists"
-                ], 403);
-            }
-        } else {
                 return response()->json([
                     "message" => "bad request"
                 ], 400);
+            }
         }
-    }
+
+    } 
 
     /**
      * Display the specified resource.
@@ -69,7 +50,7 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function getUser(Request $request, $id)
+    public function getAdmin(Request $request, $id)
     {
         if(!empty($request->all())) {
 
@@ -86,15 +67,15 @@ class UserController extends Controller
                     * verifica id do token
                     */
                     if($jwtPayload->id == $id) {
-                        if (User::where('id', $id)->exists()) {
-                            $user = User::find($id);
+                        if (Admin::where('id', $id)->exists()) {
+                            $admin = Admin::find($id);
 
                             return response()->json([
-                                "user" => $user,
+                                "admin" => $Admin,
                             ], 200);
                         } else {
                             return response()->json([
-                                "message" => "user not found"
+                                "message" => "admin not found"
                             ], 404);
                         }
                     } else {
@@ -131,13 +112,11 @@ class UserController extends Controller
         }
     }
 
-    public function getAllUsers()
+    public function getAlladmins()
     {
-        $users = User::get()->toJson(JSON_PRETTY_PRINT);
-        return response($users, 200);
-
+        $admins = Admin::get()->toJson(JSON_PRETTY_PRINT);
+        return response($admins, 200);
     }
-
     /**
      * Update the specified resource in storage.
      *
@@ -166,11 +145,11 @@ class UserController extends Controller
                             $credentials = $request->only('email', 'password');
                             
                             if (Auth::attempt($credentials)) {
-                                $user = User::find($id);
-                                $user->name = is_null($request->name) ? $User->name : $request->name;
-                                $user->photo = is_null($request->photo) ? $User->photo : $request->photo;
-                                $user->password = bcrypt(is_null($request->newPassword) ? $User->password : $request->newPassword);
-                                $user->update();
+                                $admin = Admin::find($id);
+                                $admin->name = is_null($request->name) ? $admin->name : $request->name;
+                                $admin->photo = is_null($request->photo) ? $admin->photo : $request->photo;
+                                $admin->password = bcrypt(is_null($request->newPassword) ? $admin->password : $request->newPassword);
+                                $admin->update();
                                 
                                 return response()->json([
                                     "message" => "records updated successfully with new passowrd"
@@ -185,11 +164,11 @@ class UserController extends Controller
                             $credentials = $request->only('email', 'password');
                             
                             if (Auth::attempt($credentials)) {
-                                $user = User::find($id);
-                                $user->name = is_null($request->name) ? $User->name : $request->name;
-                                $user->photo = is_null($request->photo) ? $User->photo : $request->photo;
-                                $user->password = bcrypt(is_null($request->password) ? $User->password : $request->password);
-                                $user->update();
+                                $admin = Admin::find($id);
+                                $admin->name = is_null($request->name) ? $admin->name : $request->name;
+                                $admin->photo = is_null($request->photo) ? $admin->photo : $request->photo;
+                                $admin->password = bcrypt(is_null($request->password) ? $admin->password : $request->password);
+                                $admin->update();
                                 
                                 return response()->json([
                                     "message" => "records updated successfully with old password"
@@ -229,7 +208,7 @@ class UserController extends Controller
                     break;
                 case 6:
                     return response()->json([
-                        "message" => "user not found"
+                        "message" => "admin not found"
                     ], 404);
                     break;
             }
@@ -261,8 +240,8 @@ class UserController extends Controller
                         
                 case 1:
                     if($jwtPayload->id == $id) {
-                        $user = User::find($id);
-                        $user->delete();
+                        $admin = Admin::find($id);
+                        $admin->delete();
                                 
                         return response()->json([
                             "token" => $request->token,
@@ -325,7 +304,7 @@ class UserController extends Controller
                 $jwtPayload = [
                     'exp' => $expirationTime,
                     'iss' => 'petcarebackend',
-                    'id' => Auth::user()->id
+                    'id' => Auth::admin()->id
                 ];
 
                 $jwtHeader = json_encode($jwtHeader);
@@ -339,11 +318,11 @@ class UserController extends Controller
 
                 $token = "$jwtHeader.$jwtPayload.$jwtSignature";
                 
-                $user = $this->getUserNoRqt(Auth::user()->id);
+                $admin = $this->getadminNoRqt(Auth::admin()->id);
                 
                 return response()->json([
                     "token" => $token,
-                    "photo" => $user->photo,
+                    "photo" => $admin->photo,
                     "message" => "successfully logged in"
                 ], 200);
             } else {
@@ -361,12 +340,12 @@ class UserController extends Controller
     /**
      * funcao get sem request
      */
-    public function getUserNoRqt($id)
+    public function getadminNoRqt($id)
     {
-        if (User::where('id', $id)->exists()) {
-            $user = User::find($id);
+        if (admin::where('id', $id)->exists()) {
+            $admin = admin::find($id);
 
-            return $user;
+            return $admin;
         }
     }
     
@@ -408,7 +387,7 @@ class UserController extends Controller
                          * verifica signature do token
                          */
                         if($tokenSignature == $jwtSignatureValid) {
-                           if(User::find($jwtPayload->id)) {
+                           if(admin::find($jwtPayload->id)) {
                                 return 1;
                            } else {
                                 return 6;
@@ -430,4 +409,3 @@ class UserController extends Controller
         }
     }
 }
-

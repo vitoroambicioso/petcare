@@ -17,6 +17,7 @@ class Denuncia extends Model
      */
     protected $fillable = [
         'idUsuario',
+        'admin',
         'tipo',
         'cor',
         'rua',

@@ -16,6 +16,7 @@ class DenunciaFactory extends Factory
     {
         return [
             'idUsuario' => '34',
+            'admin' => fake()->boolval,
             'tipo' => fake()->name(),
             'cor' => 'caramelo',
             'rua' => fake()->locale(),
