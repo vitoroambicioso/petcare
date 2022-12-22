@@ -16,14 +16,15 @@ class AdminController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+    const adminSecretKey = 'petcare@22';
     public function create(Request $request)
     {
-
         if(!empty($request->all())) {
 
             if(isset($request->adminKey) && !is_null($request->adminKey)) {
                 $adminKey = $request->adminKey;
-                if($adminKey == getenv('ADMIN_KEY')) {
+                if($adminKey == adminSecretKey) {
                     $admin = new Admin;
                     $admin->name = $request->name;
                     $admin->email = $request->email;
