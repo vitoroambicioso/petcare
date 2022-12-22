@@ -21,8 +21,8 @@ class AdminController extends Controller
 
         if(!empty($request->all())) {
 
-            if(isset($request->admin) && !is_null($request->admin)) {
-                $adminKey = $request->admin;
+            if(isset($request->adminKey) && !is_null($request->adminKey)) {
+                $adminKey = $request->adminKey;
                 if($adminKey == getenv('ADMIN_KEY')) {
                     $admin = new Admin;
                     $admin->name = $request->name;
@@ -41,7 +41,7 @@ class AdminController extends Controller
                 }
             } else {
                 return response()->json([
-                    "message" => "bad request"
+                    "message" => "admin key does not exist or is null"
                 ], 400);
             }
         }
