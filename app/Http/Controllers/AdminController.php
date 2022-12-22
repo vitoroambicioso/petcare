@@ -22,7 +22,7 @@ class AdminController extends Controller
 
             if(isset($request->adminKey) && !is_null($request->adminKey)) {
                 $adminKey = $request->adminKey;
-                $secretKey = getenv('ADMIN_KEY');
+                $secretKey = "petcare@jm22";
                 if($adminKey == $secretKey) {
                     $admin = new Admin;
                     $admin->name = $request->name;
