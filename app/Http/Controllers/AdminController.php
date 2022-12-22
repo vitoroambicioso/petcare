@@ -28,6 +28,7 @@ class AdminController extends Controller
                     $admin->name = $request->name;
                     $admin->email = $request->email;
                     $admin->photo = $request->photo;
+                    $admin->adminKey = $request->adminKey;
                     $admin->password = bcrypt($request->password);
                     $admin->save();
 
