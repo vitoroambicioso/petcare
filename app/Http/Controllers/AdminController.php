@@ -323,7 +323,7 @@ class AdminController extends Controller
 
                 $token = "$jwtHeader.$jwtPayload.$jwtSignature";
                 
-                $admin = $this->getadminNoRqt(Auth::admin()->id);
+                $admin = $this->getAdminNoRqt(Auth::admin()->id);
                 
                 return response()->json([
                     "token" => $token,
@@ -345,10 +345,10 @@ class AdminController extends Controller
     /**
      * funcao get sem request
      */
-    public function getadminNoRqt($id)
+    public function getAdminNoRqt($id)
     {
-        if (admin::where('id', $id)->exists()) {
-            $admin = admin::find($id);
+        if (Admin::where('id', $id)->exists()) {
+            $admin = Admin::find($id);
 
             return $admin;
         }
