@@ -7,6 +7,7 @@ use App\Models\Admin;
 use Auth;
 use Session;
 use Carbon\Carbon;
+use App\Models\User;
 
 class AdminController extends Controller
 {
@@ -21,23 +22,31 @@ class AdminController extends Controller
         if(!empty($request->all())) {
 
             if(isset($request->adminKey) && !is_null($request->adminKey)) {
-                $adminKey = $request->adminKey;
-                $secretKey = "petcare@jm22";
-                if($adminKey == $secretKey) {
-                    $admin = new Admin;
-                    $admin->name = $request->name;
-                    $admin->email = $request->email;
-                    $admin->photo = $request->photo;
-                    $admin->adminKey = $request->adminKey;
-                    $admin->password = bcrypt($request->password);
-                    $admin->save();
 
-                    return response()->json([
-                        "message" => "admin record created"
-                    ], 201); 
+                if(Admin::where('email', $request->email)->exists() == FALSE) {
+                    
+                    $adminKey = $request->adminKey;
+                    $secretKey = "petcare@jm22";
+                    if($adminKey == $secretKey) {
+                        $admin = new Admin;
+                        $admin->name = $request->name;
+                        $admin->email = $request->email;
+                        $admin->photo = $request->photo;
+                        $admin->adminKey = $request->adminKey;
+                        $admin->password = bcrypt($request->password);
+                        $admin->save();
+
+                        return response()->json([
+                            "message" => "admin record created"
+                        ], 201); 
+                    } else {
+                        return response()->json([
+                            "message" => "access denied by admin key wrong"
+                        ], 403);
+                    }
                 } else {
                     return response()->json([
-                        "message" => "access denied by admin key wrong"
+                        "message" => "admin already exists"
                     ], 403);
                 }
             } else {
@@ -76,7 +85,7 @@ class AdminController extends Controller
                             $admin = Admin::find($id);
 
                             return response()->json([
-                                "admin" => $Admin,
+                                "admin" => $admin,
                             ], 200);
                         } else {
                             return response()->json([
@@ -117,11 +126,110 @@ class AdminController extends Controller
         }
     }
 
-    public function getAlladmins()
+    /**
+     * Display the specified resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getAllUsers(Request $request)
     {
-        $admins = Admin::get()->toJson(JSON_PRETTY_PRINT);
-        return response($admins, 200);
+        if(!empty($request->all())) {
+            $tokenParts = explode(".", $request->token);  
+            $tokenPayload = base64_decode($tokenParts[1]);
+            $jwtPayload = json_decode($tokenPayload);
+
+            $tokenValid = $this->validacaoJwt($request);
+                
+            switch($tokenValid) {
+                case 1:
+                    $users = User::get();
+                    return response()->json([
+                        $users
+                    ], 200);
+                    break;
+                case 2:
+                    return response()->json([
+                        "message" => "token has expired",
+                    ], 403);
+                    break;
+                case 3:
+                    return response()->json([
+                        "message" => "invalid token",
+                    ], 403);
+                    break;
+                case 4:
+                    return response()->json([
+                        "message" => "invalid token structure"
+                    ], 403);
+                    break;
+                case 5:
+                    return response()->json([
+                        "message" => "token does not exist"
+                    ], 403);
+                    break;
+                case 6:
+                    return response()->json([
+                        "message" => "access denied"
+                    ], 404);
+                    break;
+            }
+        }
+      
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getAllAdmins(Request $request)
+    {
+        if(!empty($request->all())) {
+            $tokenParts = explode(".", $request->token);  
+            $tokenPayload = base64_decode($tokenParts[1]);
+            $jwtPayload = json_decode($tokenPayload);
+
+            $tokenValid = $this->validacaoJwt($request);
+                
+            switch($tokenValid) {
+                case 1:
+                    $admins = Admin::get();
+                    return response()->json([
+                        $admins
+                    ], 200);
+                    break;
+                case 2:
+                    return response()->json([
+                        "message" => "token has expired",
+                    ], 403);
+                    break;
+                case 3:
+                    return response()->json([
+                        "message" => "invalid token",
+                    ], 403);
+                    break;
+                case 4:
+                    return response()->json([
+                        "message" => "invalid token structure"
+                    ], 403);
+                    break;
+                case 5:
+                    return response()->json([
+                        "message" => "token does not exist"
+                    ], 403);
+                    break;
+                case 6:
+                    return response()->json([
+                        "message" => "access denied"
+                    ], 403);
+                    break;
+            }
+        }
+      
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -149,7 +257,7 @@ class AdminController extends Controller
                             
                             $credentials = $request->only('email', 'password');
                             
-                            if (Auth::attempt($credentials)) {
+                            if (Auth::guard('admin')->attempt($credentials)) {
                                 $admin = Admin::find($id);
                                 $admin->name = is_null($request->name) ? $admin->name : $request->name;
                                 $admin->photo = is_null($request->photo) ? $admin->photo : $request->photo;
@@ -168,7 +276,7 @@ class AdminController extends Controller
 
                             $credentials = $request->only('email', 'password');
                             
-                            if (Auth::attempt($credentials)) {
+                            if (Auth::guard('admin')->attempt($credentials)) {
                                 $admin = Admin::find($id);
                                 $admin->name = is_null($request->name) ? $admin->name : $request->name;
                                 $admin->photo = is_null($request->photo) ? $admin->photo : $request->photo;
@@ -249,7 +357,6 @@ class AdminController extends Controller
                         $admin->delete();
                                 
                         return response()->json([
-                            "token" => $request->token,
                             "message" => "records deleted"
                         ], 202);
                     } else {
@@ -278,6 +385,11 @@ class AdminController extends Controller
                         "message" => "token does not exist"
                     ], 403);
                     break;
+                case 6:
+                    return response()->json([
+                        "message" => "admin not found"
+                    ], 404);
+                    break;
             }
         } else {
             return response()->json([
@@ -297,7 +409,7 @@ class AdminController extends Controller
 
     
             $credentials = $request->only('email', 'password');
-            if (Auth::attempt($credentials)) {
+            if (Auth::guard('admin')->attempt($credentials)) {
 
                 $timeNow = time();
                 $expirationTime = $timeNow + 60*60;
@@ -309,7 +421,8 @@ class AdminController extends Controller
                 $jwtPayload = [
                     'exp' => $expirationTime,
                     'iss' => 'petcarebackend',
-                    'id' => Auth::admin()->id
+                    'id' => Auth::guard('admin')->user()->id,
+                    'email' => $request->email
                 ];
 
                 $jwtHeader = json_encode($jwtHeader);
@@ -323,7 +436,7 @@ class AdminController extends Controller
 
                 $token = "$jwtHeader.$jwtPayload.$jwtSignature";
                 
-                $admin = $this->getAdminNoRqt(Auth::admin()->id);
+                $admin = $this->getAdminNoRqt(Auth::guard('admin')->user()->id);
                 
                 return response()->json([
                     "token" => $token,
@@ -392,7 +505,7 @@ class AdminController extends Controller
                          * verifica signature do token
                          */
                         if($tokenSignature == $jwtSignatureValid) {
-                           if(admin::find($jwtPayload->id)) {
+                           if(Admin::find($jwtPayload->id)) {
                                 return 1;
                            } else {
                                 return 6;
