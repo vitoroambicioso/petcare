@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\DenunciaController;
+use App\Http\Controllers\AdminController;
 use App\Models\User;
 use App\Http\Controllers\TokenController;
 /*use App\Http\Controllers\AuthController;*/
@@ -32,13 +33,18 @@ Route::post('/usuario', [UserController::class, 'create'])->name('user.create');
 Route::post('/usuario/{id}', [UserController::class, 'getUser'])->name('user.get');
 Route::put('/usuario/{id}', [UserController::class, 'edit'])->name('user.edit');
 Route::delete('/usuario/{id}', [UserController::class, 'delete'])->name('user.delete');
-Route::get('/usuarios', [UserController::class, 'getAllUsers']);
 Route::post('/login', [UserController::class, 'login'])->name('user.login');
 
-/**
- * rota de login google
- */
-Route::post('/loginGoogle', [UserController::class, 'loginGoogle'])->name('user.loginGoogle');
+/*
+ * rotas do admin
+*/
+Route::post('/admin', [AdminController::class, 'create'])->name('admin.create');
+Route::post('/admin/{id}', [AdminController::class, 'getAdmin'])->name('admin.get');
+Route::put('/admin/{id}', [AdminController::class, 'edit'])->name('admin.edit');
+Route::delete('/admin/{id}', [AdminController::class, 'delete'])->name('admin.delete');
+Route::post('/usuarios', [AdminController::class, 'getAllUsers']);
+Route::post('/admins', [AdminController::class, 'getAllAdmins']);
+Route::post('/loginadm', [AdminController::class, 'login'])->name('admin.login');
 
 /**
  * rotas da denuncia

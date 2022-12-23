@@ -5,9 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\DenunciaController;
-use App\Models\User;
 use App\Http\Controllers\TokenController;
 use App\Http\Controllers\AdminController;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,15 +43,16 @@ Route::put('/denuncia/{id}', [DenunciaController::class, 'edit'])->name('denunci
 Route::delete('/denuncia/{id}', [DenunciaController::class, 'delete'])->name('denuncia.delete');
 Route::get('/denuncias', [DenunciaController::class, 'getAllDenuncias']);
 
-/**
- * rotas do usuario
- */
+/*
+ * rotas do admin
+*/
 Route::post('/admin', [AdminController::class, 'create'])->name('admin.create');
 Route::post('/admin/{id}', [AdminController::class, 'getAdmin'])->name('admin.get');
 Route::put('/admin/{id}', [AdminController::class, 'edit'])->name('admin.edit');
 Route::delete('/admin/{id}', [AdminController::class, 'delete'])->name('admin.delete');
-Route::get('/admins', [AdminController::class, 'getAllAdmin']);
-Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login');
+Route::post('/usuarios', [AdminController::class, 'getAllUsers']);
+Route::post('/admins', [AdminController::class, 'getAllAdmins']);
+Route::post('/loginadm', [AdminController::class, 'login'])->name('admin.login');
 
 /**
  * gerando token CSRF 
