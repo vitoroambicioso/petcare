@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Admin;
+use App\Http\Controllers\AdminController;
 use Auth;
 use Session;
 use Carbon\Carbon;
@@ -41,16 +43,23 @@ class UserController extends Controller
         if(!empty($request->all())) {
             
             if(User::where('email', $request->email)->exists() == FALSE) {
-                $user = new User;
-                $user->name = $request->name;
-                $user->email = $request->email;
-                $user->photo = $request->photo;
-                $user->password = bcrypt($request->password);
-                $user->save();
 
-                return response()->json([
-                    "message" => "user record created"
-                ], 201);
+                if(Admin::where('email', $request->email)->exists() == FALSE) {
+                    $user = new User;
+                    $user->name = $request->name;
+                    $user->email = $request->email;
+                    $user->photo = $request->photo;
+                    $user->password = bcrypt($request->password);
+                    $user->save();
+    
+                    return response()->json([
+                        "message" => "user record created"
+                    ], 201);
+                } else {
+                    return response()->json([
+                        "message" => "user is admin"
+                    ], 403);
+                }
             } else {
                 return response()->json([
                     "message" => "user already exists"
@@ -131,13 +140,6 @@ class UserController extends Controller
         }
     }
 
-    public function getAllUsers()
-    {
-        $users = User::get()->toJson(JSON_PRETTY_PRINT);
-        return response($users, 200);
-
-    }
-
     /**
      * Update the specified resource in storage.
      *
@@ -147,91 +149,145 @@ class UserController extends Controller
      */
     public function edit(Request $request, $id)
     {
-
         if(!empty($request->all())) {
-
+           
             $tokenParts = explode(".", $request->token);  
             $tokenPayload = base64_decode($tokenParts[1]);
             $jwtPayload = json_decode($tokenPayload);
+            
+            if(Admin::where('email', $jwtPayload->email)->exists()) {
 
-            $tokenValid = $this->validacaoJwt($request);
-                
-            switch($tokenValid) {
+                $isAdmin = new AdminController;
+                $tokenValidAdmin = $isAdmin->validacaoJwt($request);
+
+                switch($tokenValidAdmin) {
+
+                    case 1:
+                        $credentials = ['email' => $jwtPayload->email, 'password' => $request->password];
+                            
+                        if (Auth::guard('admin')->attempt($credentials)) {
+                            $user = User::find($id);
+                            $user->name = is_null($request->name) ? $user->name : $request->name;
+                            $user->email = is_null($request->email) ? $user->email : $request->email;
+                            $user->photo = is_null($request->photo) ? $user->photo : $request->photo;
+                            $user->password = bcrypt(is_null($request->newPassword) ? $user->password : $request->newPassword);
+                            $user->update();
+                            
+                            return response()->json([
+                                "message" => "user records updated successfully by admin"
+                            ], 200);
+                        } else {
+                            return response()->json([
+                                "message" => "login admin attempt failed",
+                            ], 404);
+                        }
+                        break;
+                        case 2:
+                            return response()->json([
+                                "message" => "token has expired",
+                            ], 403);
+                            break;
+                        case 3:
+                            return response()->json([
+                                "message" => "invalid token",
+                            ], 403);
+                            break;
+                        case 4:
+                            return response()->json([
+                                "message" => "invalid token structure"
+                            ], 403);
+                            break;
+                        case 5:
+                            return response()->json([
+                                "message" => "token does not exist"
+                            ], 403);
+                            break;
+                        case 6:
+                            return response()->json([
+                                "message" => "admin not found"
+                            ], 404);
+                            break;
+                }
+            } else {
+
+                $tokenValid = $this->validacaoJwt($request);
+
+                switch($tokenValid) {
                     
-                case 1:
-                    if($jwtPayload->id == $id) {
+                    case 1:                          
+                        if($jwtPayload->id == $id) {
 
-                        if(isset($request->newPassword)){
-                            
-                            $credentials = $request->only('email', 'password');
-                            
-                            if (Auth::attempt($credentials)) {
-                                $user = User::find($id);
-                                $user->name = is_null($request->name) ? $User->name : $request->name;
-                                $user->photo = is_null($request->photo) ? $User->photo : $request->photo;
-                                $user->password = bcrypt(is_null($request->newPassword) ? $User->password : $request->newPassword);
-                                $user->update();
+                            if(isset($request->newPassword)){
                                 
-                                return response()->json([
-                                    "message" => "records updated successfully with new passowrd"
-                                ], 200);
+                                $credentials = $request->only('email', 'password');
+                                
+                                if (Auth::attempt($credentials)) {
+                                    $user = User::find($id);
+                                    $user->name = is_null($request->name) ? $user->name : $request->name;
+                                    $user->photo = is_null($request->photo) ? $user->photo : $request->photo;
+                                    $user->password = bcrypt(is_null($request->newPassword) ? $user->password : $request->newPassword);
+                                    $user->update();
+                                    
+                                    return response()->json([
+                                        "message" => "records updated successfully with new passowrd"
+                                    ], 200);
+                                } else {
+                                    return response()->json([
+                                        "message" => "login attempt failed"
+                                    ], 404);
+                                }
                             } else {
-                                return response()->json([
-                                    "message" => "login attempt failed"
-                                ], 404);
+    
+                                $credentials = $request->only('email', 'password');
+                                
+                                if (Auth::attempt($credentials)) {
+                                    $user = User::find($id);
+                                    $user->name = is_null($request->name) ? $User->name : $request->name;
+                                    $user->photo = is_null($request->photo) ? $User->photo : $request->photo;
+                                    $user->password = bcrypt(is_null($request->password) ? $User->password : $request->password);
+                                    $user->update();
+                                    
+                                    return response()->json([
+                                        "message" => "records updated successfully with old password"
+                                    ], 200);
+                                } else {
+                                    return response()->json([
+                                        "message" => "login attempt failed"
+                                    ], 404);
+                                }
                             }
                         } else {
-
-                            $credentials = $request->only('email', 'password');
-                            
-                            if (Auth::attempt($credentials)) {
-                                $user = User::find($id);
-                                $user->name = is_null($request->name) ? $User->name : $request->name;
-                                $user->photo = is_null($request->photo) ? $User->photo : $request->photo;
-                                $user->password = bcrypt(is_null($request->password) ? $User->password : $request->password);
-                                $user->update();
-                                
-                                return response()->json([
-                                    "message" => "records updated successfully with old password"
-                                ], 200);
-                            } else {
-                                return response()->json([
-                                    "message" => "login attempt failed"
-                                ], 404);
-                            }
+                            return response()->json([
+                                "message" => "id not found"
+                            ], 403);
                         }
-
-                    } else {
+                        break;
+                    case 2:
                         return response()->json([
-                            "message" => "id not found"
+                            "message" => "token has expired",
                         ], 403);
-                    }
-                    break;
-                case 2:
-                    return response()->json([
-                        "message" => "token has expired",
-                    ], 403);
-                    break;
-                case 3:
-                    return response()->json([
-                        "message" => "invalid token",
-                    ], 403);
-                    break;
-                case 4:
-                    return response()->json([
-                        "message" => "invalid token structure"
-                    ], 403);
-                    break;
-                case 5:
-                    return response()->json([
-                        "message" => "token does not exist"
-                    ], 403);
-                    break;
-                case 6:
-                    return response()->json([
-                        "message" => "user not found"
-                    ], 404);
-                    break;
+                        break;
+                    case 3:
+                        return response()->json([
+                            "message" => "invalid token",
+                        ], 403);
+                        break;
+                    case 4:
+                        return response()->json([
+                            "message" => "invalid token structure"
+                        ], 403);
+                        break;
+                    case 5:
+                        return response()->json([
+                            "message" => "token does not exist"
+                        ], 403);
+                        break;
+                    case 6:
+                        return response()->json([
+                            "message" => "user not found"
+                        ], 404);
+                        break;
+                }
             }
         } else {
             return response()->json([
@@ -255,45 +311,103 @@ class UserController extends Controller
             $tokenPayload = base64_decode($tokenParts[1]);
             $jwtPayload = json_decode($tokenPayload);
 
-            $tokenValid = $this->validacaoJwt($request);
-                
-            switch($tokenValid) {
-                        
-                case 1:
-                    if($jwtPayload->id == $id) {
-                        $user = User::find($id);
-                        $user->delete();
-                                
+            if(Admin::where('email', $jwtPayload->email)->exists()) {
+
+                $isAdmin = new AdminController;
+                $tokenValidAdmin = $isAdmin->validacaoJwt($request);
+
+                switch($tokenValidAdmin) {
+
+                    case 1:
+                        $credentials = ['email' => $jwtPayload->email, 'password' => $request->password];
+                            
+                        if (Auth::guard('admin')->attempt($credentials)) {
+                            
+                            if(User::where('id', $id)->exists()) {
+                                $user = User::find($id);
+                                $user->delete();
+
+                                return response()->json([
+                                    "message" => "user records deleted by admin"
+                                ], 202);
+                            } else {
+                                return response()->json([
+                                    "message" => "id not found"
+                                ], 404);
+                            }
+                        } else {
+                            return response()->json([
+                                "message" => "login admin attempt failed"
+                            ], 403);
+                        }
+                        break;
+                            case 2:
                         return response()->json([
-                            "token" => $request->token,
-                            "message" => "records deleted"
-                        ], 202);
-                    } else {
-                        return response()->json([
-                            "message" => "id not found"
+                            "message" => "token has expired",
                         ], 403);
-                    }
-                    break;
-                case 2:
-                    return response()->json([
-                        "message" => "token has expired",
-                    ], 403);
-                    break;
-                case 3:
-                    return response()->json([
-                        "message" => "invalid token",
-                    ], 403);
-                    break;
-                case 4:
-                    return response()->json([
-                        "message" => "invalid token structure"
-                    ], 403);
-                    break;
-                case 5:
-                    return response()->json([
-                        "message" => "token does not exist"
-                    ], 403);
-                    break;
+                        break;
+                    case 3:
+                        return response()->json([
+                            "message" => "invalid token",
+                        ], 403);
+                        break;
+                    case 4:
+                        return response()->json([
+                            "message" => "invalid token structure"
+                        ], 403);
+                        break;
+                    case 5:
+                        return response()->json([
+                            "message" => "token does not exist"
+                        ], 403);
+                        break;
+                    case 6:
+                        return response()->json([
+                            "message" => "admin not found"
+                        ], 404);
+                        break;
+                }
+            } else {
+
+                $tokenValid = $this->validacaoJwt($request);
+                
+                switch($tokenValid) {
+                            
+                    case 1:
+                        if($jwtPayload->id == $id) {
+                            $user = User::find($id);
+                            $user->delete();
+                                    
+                            return response()->json([
+                                "message" => "user records deleted"
+                            ], 202);
+                        } else {
+                            return response()->json([
+                                "message" => "id not found"
+                            ], 404);
+                        }
+                        break;
+                    case 2:
+                        return response()->json([
+                            "message" => "token has expired",
+                        ], 403);
+                        break;
+                    case 3:
+                        return response()->json([
+                            "message" => "invalid token",
+                        ], 403);
+                        break;
+                    case 4:
+                        return response()->json([
+                            "message" => "invalid token structure"
+                        ], 403);
+                        break;
+                    case 5:
+                        return response()->json([
+                            "message" => "token does not exist"
+                        ], 403);
+                        break;
+                }
             }
         } else {
             return response()->json([
@@ -325,7 +439,8 @@ class UserController extends Controller
                 $jwtPayload = [
                     'exp' => $expirationTime,
                     'iss' => 'petcarebackend',
-                    'id' => Auth::user()->id
+                    'id' => Auth::user()->id,
+                    'email' => $request->email
                 ];
 
                 $jwtHeader = json_encode($jwtHeader);
