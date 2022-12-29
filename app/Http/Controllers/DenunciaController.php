@@ -38,160 +38,61 @@ class DenunciaController extends Controller
                 $jwtHeader = json_decode($tokenHeader);
                 $tokenPayload = base64_decode($tokenParts[1]);
                 $jwtPayload = json_decode($tokenPayload);
-
-                if(isset($request->admin) && !is_null($request->admin)) {
-
-                    $adminKey = $request->admin;
-                    if($adminKey == getenv('ADMIN_KEY')) {
-                        $admin = new Admin;
-                        $tokenValid = $admin->validacaoJwt($request);
-
-                        switch($tokenValid) {
-
-                            case 1:
-                                if(isset($request->picture2) == TRUE && isset($request->picture3) == FALSE) {
-                                    $denuncia = new Denuncia;
-                                    $denuncia->idUsuario = $jwtPayload->id;
-                                    $denuncia->admin = true;
-                                    $denuncia->tipo = $request->tipo;
-                                    $denuncia->cor = $request->cor;
-                                    $denuncia->rua = $request->rua;
-                                    $denuncia->bairro = $request->bairro;
-                                    $denuncia->pontoDeReferencia = $request->pontoDeReferencia;
-                                    $denuncia->picture1 = $request->picture1;
-                                    $denuncia->picture2 = $request->picture2;
-                                    $denuncia->descricao = $request->descricao;
-                                    $denuncia->save();
-            
-                                    return response()->json([
-                                        "message" => "denuncia record created"
-                                    ], 201);
-                                } else if(isset($request->picture3)) {
-                                    $denuncia = new Denuncia;
-                                    $denuncia->idUsuario = $jwtPayload->id;
-                                    $denuncia->admin = true;
-                                    $denuncia->tipo = $request->tipo;
-                                    $denuncia->cor = $request->cor;
-                                    $denuncia->rua = $request->rua;
-                                    $denuncia->bairro = $request->bairro;
-                                    $denuncia->pontoDeReferencia = $request->pontoDeReferencia;
-                                    $denuncia->picture1 = $request->picture1;
-                                    $denuncia->picture2 = $request->picture2;
-                                    $denuncia->picture3 = $request->picture3;
-                                    $denuncia->descricao = $request->descricao;
-                                    $denuncia->save();
-                
-                                    return response()->json([
-                                        "message" => "denuncia record created"
-                                    ], 201);
-                                } else {
-                                    $denuncia = new Denuncia;
-                                    $denuncia->idUsuario = $jwtPayload->id;
-                                    $denuncia->admin = true;
-                                    $denuncia->tipo = $request->tipo;
-                                    $denuncia->cor = $request->cor;
-                                    $denuncia->rua = $request->rua;
-                                    $denuncia->bairro = $request->bairro;
-                                    $denuncia->pontoDeReferencia = $request->pontoDeReferencia;
-                                    $denuncia->picture1 = $request->picture1;
-                                    $denuncia->descricao = $request->descricao;
-                                    $denuncia->save();
-                
-                                    return response()->json([
-                                        "message" => "denuncia record created"
-                                    ], 201);
-                                }
-                                break;
-                            case 2:
-                                return response()->json([
-                                    "message" => "token has expired",
-                                ], 403);
-                                break;
-                            case 3:
-                                return response()->json([
-                                    "message" => "invalid token",
-                                ], 403);
-                                break;
-                            case 4:
-                                return response()->json([
-                                    "message" => "invalid token structure"
-                                ], 403);
-                                break;
-                            case 5:
-                                return response()->json([
-                                    "message" => "token does not exist"
-                                ], 403);
-                                break;
-                            case 6:
-                                return response()->json([
-                                    "message" => "admin not found"
-                                ], 404);
-                                break;
-                        }
-                    } else {
-                        return response()->json([
-                            "message" => "access denied by admin key is wrong"
-                        ], 403);
-                    }
-                } else if(!isset($request->admin)) {
-
-                    $tokenValid = $this->validacaoJwt($request);
-                    switch($tokenValid) {
     
-                        case 1:
+                $tokenValid = $this->validacaoJwt($request);
+                switch($tokenValid) {
 
-                            if(isset($request->picture2) == TRUE && isset($request->picture3) == FALSE) {
-                                $denuncia = new Denuncia;
-                                $denuncia->idUsuario = $jwtPayload->id;
-                                $denuncia->admin = false;
-                                $denuncia->tipo = $request->tipo;
-                                $denuncia->cor = $request->cor;
-                                $denuncia->rua = $request->rua;
-                                $denuncia->bairro = $request->bairro;
-                                $denuncia->pontoDeReferencia = $request->pontoDeReferencia;
-                                $denuncia->picture1 = $request->picture1;
-                                $denuncia->picture2 = $request->picture2;
-                                $denuncia->descricao = $request->descricao;
-                                $denuncia->save();
+                    case 1:
+
+                        if(isset($request->picture2) == TRUE && isset($request->picture3) == FALSE) {
+                            $denuncia = new Denuncia;
+                            $denuncia->idUsuario = $jwtPayload->id;
+                            $denuncia->tipo = $request->tipo;
+                            $denuncia->cor = $request->cor;
+                            $denuncia->rua = $request->rua;
+                            $denuncia->bairro = $request->bairro;
+                            $denuncia->pontoDeReferencia = $request->pontoDeReferencia;
+                            $denuncia->picture1 = $request->picture1;
+                            $denuncia->picture2 = $request->picture2;
+                            $denuncia->descricao = $request->descricao;
+                            $denuncia->save();
             
-                                return response()->json([
-                                    "message" => "denuncia record created"
-                                ], 201);
-                            } else if(isset($request->picture3)) {
-                                $denuncia = new Denuncia;
-                                $denuncia->idUsuario = $jwtPayload->id;
-                                $denuncia->admin = false;
-                                $denuncia->tipo = $request->tipo;
-                                $denuncia->cor = $request->cor;
-                                $denuncia->rua = $request->rua;
-                                $denuncia->bairro = $request->bairro;
-                                $denuncia->pontoDeReferencia = $request->pontoDeReferencia;
-                                $denuncia->picture1 = $request->picture1;
-                                $denuncia->picture2 = $request->picture2;
-                                $denuncia->picture3 = $request->picture3;
-                                $denuncia->descricao = $request->descricao;
-                                $denuncia->save();
+                            return response()->json([
+                                "message" => "denuncia record created"
+                            ], 201);
+                        } else if(isset($request->picture3)) {
+                            $denuncia = new Denuncia;
+                            $denuncia->idUsuario = $jwtPayload->id;
+                            $denuncia->tipo = $request->tipo;
+                            $denuncia->cor = $request->cor;
+                            $denuncia->rua = $request->rua;
+                            $denuncia->bairro = $request->bairro;
+                            $denuncia->pontoDeReferencia = $request->pontoDeReferencia;
+                            $denuncia->picture1 = $request->picture1;
+                            $denuncia->picture2 = $request->picture2;
+                            $denuncia->picture3 = $request->picture3;
+                            $denuncia->descricao = $request->descricao;
+                            $denuncia->save();
             
-                                return response()->json([
-                                    "message" => "denuncia record created"
-                                ], 201);
-                            } else {
-                                $denuncia = new Denuncia;
-                                $denuncia->idUsuario = $jwtPayload->id;
-                                $denuncia->admin = false;
-                                $denuncia->tipo = $request->tipo;
-                                $denuncia->cor = $request->cor;
-                                $denuncia->rua = $request->rua;
-                                $denuncia->bairro = $request->bairro;
-                                $denuncia->pontoDeReferencia = $request->pontoDeReferencia;
-                                $denuncia->picture1 = $request->picture1;
-                                $denuncia->descricao = $request->descricao;
-                                $denuncia->save();
+                            return response()->json([
+                                "message" => "denuncia record created"
+                            ], 201);
+                        } else {
+                            $denuncia = new Denuncia;
+                            $denuncia->idUsuario = $jwtPayload->id;
+                            $denuncia->tipo = $request->tipo;
+                            $denuncia->cor = $request->cor;
+                            $denuncia->rua = $request->rua;
+                            $denuncia->bairro = $request->bairro;
+                            $denuncia->pontoDeReferencia = $request->pontoDeReferencia;
+                            $denuncia->picture1 = $request->picture1;
+                            $denuncia->descricao = $request->descricao;
+                            $denuncia->save();
         
-                                return response()->json([
-                                    "message" => "denuncia record created"
-                                ], 201);
-                            }
+                            return response()->json([
+                                "message" => "denuncia record created"
+                            ], 201);
+                        }
                             break;
                         case 2:
                             return response()->json([
@@ -219,12 +120,11 @@ class DenunciaController extends Controller
                             ], 404);
                             break;
                     }
+                } else {
+                    return response()->json([
+                        "message" => "bad request"
+                    ], 400);
                 }
-            } else {
-                return response()->json([
-                    "message" => "bad request"
-                ], 400);
-            }
         }
     }
 
