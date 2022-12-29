@@ -27,7 +27,7 @@ class AdminController extends Controller
                     
                     $adminKey = $request->adminKey;
                     $secretKey = "petcare@jm22";
-                    if($adminKey == $secretKey) {
+                    if($adminKey == getenv('ADMIN_KEY')) {
                         $admin = new Admin;
                         $admin->name = $request->name;
                         $admin->email = $request->email;
@@ -151,7 +151,7 @@ class AdminController extends Controller
                 case 2:
                     return response()->json([
                         "message" => "token has expired",
-                    ], 403);
+                    ], 403);    
                     break;
                 case 3:
                     return response()->json([

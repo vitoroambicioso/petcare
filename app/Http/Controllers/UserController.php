@@ -170,7 +170,6 @@ class UserController extends Controller
                             $user->name = is_null($request->name) ? $user->name : $request->name;
                             $user->email = is_null($request->email) ? $user->email : $request->email;
                             $user->photo = is_null($request->photo) ? $user->photo : $request->photo;
-                            $user->password = bcrypt(is_null($request->newPassword) ? $user->password : $request->newPassword);
                             $user->update();
                             
                             return response()->json([
