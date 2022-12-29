@@ -141,7 +141,7 @@ class AdminController extends Controller
 
             $tokenValid = $this->validacaoJwt($request);
                 
-            if($request->adminKey == getenv('ADMIN_KEY')) {
+            if(Admin::find($jwtPayload->id)->adminKey == getenv('ADMIN_KEY')) {
                 switch($tokenValid) {
                     case 1:
                         $users = User::get();
