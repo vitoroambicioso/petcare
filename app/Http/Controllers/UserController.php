@@ -166,15 +166,29 @@ class UserController extends Controller
                         $credentials = ['email' => $jwtPayload->email, 'password' => $request->password];
                             
                         if (Auth::guard('admin')->attempt($credentials)) {
-                            $user = User::find($id);
-                            $user->name = is_null($request->name) ? $user->name : $request->name;
-                            $user->email = is_null($request->email) ? $user->email : $request->email;
-                            $user->photo = is_null($request->photo) ? $user->photo : $request->photo;
-                            $user->update();
                             
-                            return response()->json([
-                                "message" => "user records updated successfully by admin"
-                            ], 200);
+                            if(User::where('email', $request->oldEmail)->exists()) {
+
+                                if($request->oldEmail == $request->email) {
+                                    $user = User::find($id);
+                                    $user->name = is_null($request->name) ? $user->name : $request->name;
+                                    $user->email = is_null($request->email) ? $user->email : $request->email;
+                                    $user->photo = is_null($request->photo) ? $user->photo : $request->photo;
+                                    $user->update();
+                                    
+                                    return response()->json([
+                                        "message" => "user records updated successfully by admin"
+                                    ], 200);
+                                } else {
+                                    return response()->json([
+                                        "message" => "user's email already exists",
+                                    ], 404);
+                                }
+                            } else {
+                                return response()->json([
+                                    "message" => "user not found",
+                                ], 404);
+                            }
                         } else {
                             return response()->json([
                                 "message" => "login admin attempt failed",
