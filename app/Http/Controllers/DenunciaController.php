@@ -40,6 +40,7 @@ class DenunciaController extends Controller
                 $jwtPayload = json_decode($tokenPayload);
     
                 $tokenValid = $this->validacaoJwt($request);
+
                 switch($tokenValid) {
 
                     case 1:
@@ -94,32 +95,32 @@ class DenunciaController extends Controller
                             ], 201);
                         }
                             break;
-                        case 2:
-                            return response()->json([
-                                "message" => "token has expired",
-                            ], 403);
+                    case 2:
+                        return response()->json([
+                            "message" => "token has expired",
+                        ], 403);
+                        break;
+                    case 3:
+                        return response()->json([
+                            "message" => "invalid token",
+                        ], 403);
+                        break;
+                    case 4:
+                        return response()->json([
+                            "message" => "invalid token structure"
+                        ], 403);
+                        break;
+                    case 5:
+                        return response()->json([
+                            "message" => "token does not exist"
+                        ], 403);
+                        break;
+                    case 6:
+                        return response()->json([
+                            "message" => "user not found"
+                        ], 404);
                             break;
-                        case 3:
-                            return response()->json([
-                                "message" => "invalid token",
-                            ], 403);
-                            break;
-                        case 4:
-                            return response()->json([
-                                "message" => "invalid token structure"
-                            ], 403);
-                            break;
-                        case 5:
-                            return response()->json([
-                                "message" => "token does not exist"
-                            ], 403);
-                            break;
-                        case 6:
-                            return response()->json([
-                                "message" => "user not found"
-                            ], 404);
-                            break;
-                    }
+                }
                 } else {
                     return response()->json([
                         "message" => "bad request"
@@ -145,106 +146,95 @@ class DenunciaController extends Controller
             $tokenPayload = base64_decode($tokenParts[1]);
             $jwtPayload = json_decode($tokenPayload);
 
-            if(isset($request->admin) && !is_null($request->admin)) {
+            if(Admin::where('email', $jwtPayload->email)->exists()) {
 
-                $adminKey = $request->admin;
-                if($adminKey == getenv('ADMIN_KEY')) {
-                    $admin = new Admin;
-                    $tokenValid = $admin->validacaoJwt($request);
+                $isAdmin = new AdminController;
+                $tokenValidAdmin = $isAdmin->validacaoJwt($request);
+    
+                switch($tokenValidAdmin) {
 
-                    switch($tokenValid) {
+                    case 1:
+                        if (Denuncia::where('idUsuario', $request->idUsuario)->exists()) {
 
-                        case 1:
-                            if (Denuncia::where('idUsuario', $jwtPayload->id)->exists()) {
-                                
-                                $denuncia = Denuncia::where('idUsuario', $jwtPayload->id)->get();
+                            $denuncia = Denuncia::where('idUsuario', $request->idUsuario)->get();
                                 return response()->json(
-                                    $denuncia, 200);
-                            } else {
-                                return response()->json([
-                                "message" => "denuncia not found",
-                                ], 404);
-                            }
-                            break;
-                        case 2:
-                            return response()->json([
-                                "message" => "token has expired",
-                            ], 403);
-                            break;
-                        case 3:
-                            return response()->json([
-                                "message" => "invalid token",
-                            ], 403);
-                            break;
-                        case 4:
-                            return response()->json([
-                                "message" => "invalid token structure"
-                            ], 403);
-                            break;
-                        case 5:
-                            return response()->json([
-                                "message" => "token does not exist"
-                            ], 403);
-                            break;
-                        case 6:
-                            return response()->json([
-                                "message" => "user not found"
-                            ], 404);
-                            break;
-                    }
-                    
-                }
-            }
-
-            $tokenValid = $this->validacaoJwt($request);
-
-            switch($tokenValid) {
-
-                case 1:
-                    if(isset($request->admin) && !is_null($request->admin)) {
-
-                        $adminKey = $request->admin;
-                        if($adminKey == getenv('ADMIN_KEY')) {
-                            
-                        }
-                    }
-            
-                    if (Denuncia::where('idUsuario', $jwtPayload->id)->exists()) {
-                        
-                        $denuncia = Denuncia::where('idUsuario', $jwtPayload->id)->get();
-                        return response()->json(
                             $denuncia, 200);
-                    } else {
+                        } else {
+                            return response()->json([
+                                "message" => "denuncia not found",
+                            ], 404);
+                        }
+                        break;
+                    case 2:
                         return response()->json([
-                        "message" => "denuncia not found",
+                            "message" => "token has expired",
+                        ], 403);
+                        break;
+                    case 3:
+                        return response()->json([
+                            "message" => "invalid token",
+                        ], 403);
+                        break;
+                    case 4:
+                        return response()->json([
+                            "message" => "invalid token structure"
+                        ], 403);
+                        break;
+                    case 5:
+                        return response()->json([
+                            "message" => "token does not exist"
+                        ], 403);
+                        break;
+                    case 6:
+                        return response()->json([
+                            "message" => "admin not found"
                         ], 404);
-                    }
-                    break;
-                case 2:
-                    return response()->json([
-                        "message" => "token has expired",
-                    ], 403);
-                    break;
-                case 3:
-                    return response()->json([
-                        "message" => "invalid token",
-                    ], 403);
-                    break;
-                case 4:
-                    return response()->json([
-                        "message" => "invalid token structure"
-                    ], 403);
-                    break;
-                case 5:
-                    return response()->json([
-                        "message" => "token does not exist"
-                    ], 403);
-                    break;
-                case 6:
-                    return response()->json([
-                        "message" => "user not found"
-                    ], 404);
-                    break;
+                        break;    
+                }
+            } else {
+                $tokenValid = $this->validacaoJwt($request);
+
+                switch($tokenValid) {
+    
+                    case 1:
+                
+                        if (Denuncia::where('idUsuario', $jwtPayload->id)->exists()) {
+                            
+                            $denuncia = Denuncia::where('idUsuario', $jwtPayload->id)->get();
+                            return response()->json(
+                                $denuncia, 200);
+                        } else {
+                            return response()->json([
+                            "message" => "denuncia not found",
+                            ], 404);
+                        }
+                        break;
+                    case 2:
+                        return response()->json([
+                            "message" => "token has expired",
+                        ], 403);
+                        break;
+                    case 3:
+                        return response()->json([
+                            "message" => "invalid token",
+                        ], 403);
+                        break;
+                    case 4:
+                        return response()->json([
+                            "message" => "invalid token structure"
+                        ], 403);
+                        break;
+                    case 5:
+                        return response()->json([
+                            "message" => "token does not exist"
+                        ], 403);
+                        break;
+                    case 6:
+                        return response()->json([
+                            "message" => "user not found"
+                        ], 404);
+                        break;
+                }
             }
         } else {
             return response()->json([
@@ -274,17 +264,18 @@ class DenunciaController extends Controller
             $tokenPayload = base64_decode($tokenParts[1]);
             $jwtPayload = json_decode($tokenPayload);
 
-            $tokenValid = $this->validacaoJwt($request);
-                
-            switch($tokenValid) {
+            if(Admin::where('email', $jwtPayload->email)->exists()) {
 
-                case 1:
+                $isAdmin = new AdminController;
+                $tokenValidAdmin = $isAdmin->validacaoJwt($request);
+    
+                switch($tokenValidAdmin) {
 
-                    if (Denuncia::where('id', $id)->exists()) {
+                    case 1:
 
-                        $denuncia = Denuncia::find($id);
-
-                        if($jwtPayload->id == $denuncia->idUsuario) {
+                        if (Denuncia::where('id', $id)->exists()) {
+    
+                            $denuncia = Denuncia::find($id);
 
                             $denuncia->tipo = is_null($request->tipo) ? $denuncia->tipo : $request->tipo;
                             $denuncia->cor = is_null($request->cor) ? $denuncia->cor : $request->cor;
@@ -295,45 +286,102 @@ class DenunciaController extends Controller
                             $denuncia->update();
             
                             return response()->json([
-                                $denuncia,
-                                "message" => "records updated successfully"
+                                "message" => "records updated successfully by admin"
                             ], 200);
                         } else {
                             return response()->json([
-                                "message" => "user does not have permission to modify this denuncia"
-                            ], 403);
+                                "message" => "denuncia not found"
+                            ], 404);
                         }
-                    } else {
+                        break;
+                    case 2:
                         return response()->json([
-                            "message" => "denuncia not found"
+                            "message" => "token has expired",
+                        ], 403);
+                        break;
+                    case 3:
+                        return response()->json([
+                            "message" => "invalid token",
+                        ], 403);
+                        break;
+                    case 4:
+                        return response()->json([
+                            "message" => "invalid token structure"
+                        ], 403);
+                        break;
+                    case 5:
+                        return response()->json([
+                            "message" => "token does not exist"
+                        ], 403);
+                        break;
+                    case 6:
+                        return response()->json([
+                            "message" => "admin not found"
                         ], 404);
-                    }
-                    break;
-                case 2:
-                    return response()->json([
-                        "message" => "token has expired",
-                    ], 403);
-                    break;
-                case 3:
-                    return response()->json([
-                        "message" => "invalid token",
-                    ], 403);
-                    break;
-                case 4:
-                    return response()->json([
-                        "message" => "invalid token structure"
-                    ], 403);
-                    break;
-                case 5:
-                    return response()->json([
-                        "message" => "token does not exist"
-                    ], 403);
-                    break;
-                case 6:
-                    return response()->json([
-                        "message" => "user not found"
-                    ], 404);
-                    break;
+                        break;
+                }
+            } else {
+
+                $tokenValid = $this->validacaoJwt($request);
+            
+                switch($tokenValid) {
+    
+                    case 1:
+    
+                        if (Denuncia::where('id', $id)->exists()) {
+    
+                            $denuncia = Denuncia::find($id);
+    
+                            if($jwtPayload->id == $denuncia->idUsuario) {
+    
+                                $denuncia->tipo = is_null($request->tipo) ? $denuncia->tipo : $request->tipo;
+                                $denuncia->cor = is_null($request->cor) ? $denuncia->cor : $request->cor;
+                                $denuncia->rua = is_null($request->rua) ? $denuncia->rua : $request->rua;
+                                $denuncia->bairro = is_null($request->bairro) ? $denuncia->bairro : $request->bairro;
+                                $denuncia->pontoDeReferencia = is_null($request->pontoDeReferencia) ? $denuncia->pontoDeReferencia : $request->pontoDeReferencia;
+                                $denuncia->descricao = is_null($request->descricao) ? $denuncia->descricao : $request->descricao;
+                                $denuncia->update();
+                
+                                return response()->json([
+                                    "message" => "records updated successfully"
+                                ], 200);
+                            } else {
+                                return response()->json([
+                                    "message" => "user does not have permission to modify this denuncia"
+                                ], 403);
+                            }
+                        } else {
+                            return response()->json([
+                                "message" => "denuncia not found"
+                            ], 404);
+                        }
+                        break;
+                    case 2:
+                        return response()->json([
+                            "message" => "token has expired",
+                        ], 403);
+                        break;
+                    case 3:
+                        return response()->json([
+                            "message" => "invalid token",
+                        ], 403);
+                        break;
+                    case 4:
+                        return response()->json([
+                            "message" => "invalid token structure"
+                        ], 403);
+                        break;
+                    case 5:
+                        return response()->json([
+                            "message" => "token does not exist"
+                        ], 403);
+                        break;
+                    case 6:
+                        return response()->json([
+                            "message" => "user not found"
+                        ], 404);
+                        break;
+                }
             }
         } else {
             return response()->json([
@@ -356,59 +404,132 @@ class DenunciaController extends Controller
             $tokenPayload = base64_decode($tokenParts[1]);
             $jwtPayload = json_decode($tokenPayload);
 
-            $tokenValid = $this->validacaoJwt($request);
+            if(Admin::where('email', $jwtPayload->email)->exists()) {
 
-            switch($tokenValid) {
+                $isAdmin = new AdminController;
+                $tokenValidAdmin = $isAdmin->validacaoJwt($request);
+    
+                switch($tokenValidAdmin) {
+                    case 1:
 
-                case 1:
+                        if(Denuncia::where('id', $id)->exists()) {
 
-                    if(Denuncia::where('id', $id)->exists()) {
+                            $credentials = ['email' => $jwtPayload->email, 'password' => $request->password];
 
-                        $denuncia = Denuncia::find($id);
-                        
-                        if($jwtPayload->id == $denuncia->idUsuario) {
+                            if(Auth::guard('admin')->attempt($credentials)) {
+                                if($request->adminKey == getenv('ADMIN_KEY')) {
+                                    
+                                    $denuncia = Denuncia::find($id);
+                                    $denuncia->delete();
+
+                                    return response()->json([
+                                        "message" => "denuncia records deleted"
+                                    ], 202);
+                                } else {
+                                    return response()->json([
+                                        "message" => "access denied by admin key wrong"
+                                    ], 404);
+                                }
+                            } else {
+                                return response()->json([
+                                    "message" => "login attempt failed"
+                                ], 404);
+                            }
+    
+                            $denuncia = Denuncia::find($id);
                             $denuncia->delete();
-                
+                    
                             return response()->json([
-                            $denuncia,
-                            "message" => "denuncia records deleted"
+                                "message" => "denuncia records deleted"
                             ], 202);
+                            } else {
+                                return response()->json([
+                                    "message" => "user does not have permission to delete this denuncia"
+                                ], 403);
+                            }
+                        break;
+                    case 2:
+                        return response()->json([
+                            "message" => "token has expired",
+                        ], 403);
+                        break;
+                    case 3:
+                        return response()->json([
+                            "message" => "invalid token",
+                        ], 403);
+                        break;
+                    case 4:
+                        return response()->json([
+                            "message" => "invalid token structure"
+                        ], 403);
+                        break;
+                    case 5:
+                        return response()->json([
+                            "message" => "token does not exist"
+                        ], 403);
+                        break;
+                    case 6:
+                        return response()->json([
+                            "message" => "admin not found"
+                        ], 404);
+                        break;
+                }
+            } else {
+
+                $tokenValid = $this->validacaoJwt($request);
+
+                switch($tokenValid) {
+    
+                    case 1:
+    
+                        if(Denuncia::where('id', $id)->exists()) {
+    
+                            $denuncia = Denuncia::find($id);
+                            
+                            if($jwtPayload->id == $denuncia->idUsuario) {
+                                $denuncia->delete();
+                    
+                                return response()->json([
+                                $denuncia,
+                                "message" => "denuncia records deleted"
+                                ], 202);
+                            } else {
+                                return response()->json([
+                                    "message" => "user does not have permission to delete this denuncia"
+                                ], 403);
+                            }
                         } else {
                             return response()->json([
-                                "message" => "user does not have permission to delete this denuncia"
-                            ], 403);
+                            "message" => "denuncia not found"
+                            ], 404);
                         }
-                    } else {
+                        break;
+                    case 2:
                         return response()->json([
-                        "message" => "denuncia not found"
+                            "message" => "token has expired",
+                        ], 403);
+                        break;
+                    case 3:
+                        return response()->json([
+                            "message" => "invalid token",
+                        ], 403);
+                        break;
+                    case 4:
+                        return response()->json([
+                            "message" => "invalid token structure"
+                        ], 403);
+                        break;
+                    case 5:
+                        return response()->json([
+                            "message" => "token does not exist"
+                        ], 403);
+                        break;
+                    case 6:
+                        return response()->json([
+                            "message" => "user not found"
                         ], 404);
-                    }
-                    break;
-                case 2:
-                    return response()->json([
-                        "message" => "token has expired",
-                    ], 403);
-                    break;
-                case 3:
-                    return response()->json([
-                        "message" => "invalid token",
-                    ], 403);
-                    break;
-                case 4:
-                    return response()->json([
-                        "message" => "invalid token structure"
-                    ], 403);
-                    break;
-                case 5:
-                    return response()->json([
-                        "message" => "token does not exist"
-                    ], 403);
-                    break;
-                case 6:
-                    return response()->json([
-                        "message" => "user not found"
-                    ], 404);
-                    break;
+                        break;
+                }
             }
         } else {
             return response()->json([
