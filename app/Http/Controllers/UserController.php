@@ -182,7 +182,7 @@ class UserController extends Controller
                                 } else {
                                     return response()->json([
                                         "message" => "user's email already exists",
-                                    ], 404);
+                                    ], 403);
                                 }
                             } else {
                                 return response()->json([
@@ -335,17 +335,24 @@ class UserController extends Controller
                         $credentials = ['email' => $jwtPayload->email, 'password' => $request->password];
                             
                         if (Auth::guard('admin')->attempt($credentials)) {
-                            
-                            if(User::where('id', $id)->exists()) {
-                                $user = User::find($id);
-                                $user->delete();
 
-                                return response()->json([
-                                    "message" => "user records deleted by admin"
-                                ], 202);
+                            if($request->adminKey == getenv('ADMIN_KEY')) {
+
+                                if(User::where('id', $id)->exists()) {
+                                    $user = User::find($id);
+                                    $user->delete();
+    
+                                    return response()->json([
+                                        "message" => "user records deleted by admin"
+                                    ], 202);
+                                } else {
+                                    return response()->json([
+                                        "message" => "id not found"
+                                    ], 404);
+                                }
                             } else {
                                 return response()->json([
-                                    "message" => "id not found"
+                                    "message" => "access denied by admin key wrong"
                                 ], 404);
                             }
                         } else {
