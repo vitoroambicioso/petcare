@@ -26,7 +26,7 @@ class AdminController extends Controller
                 if(Admin::where('email', $request->email)->exists() == FALSE) {
                     
                     $adminKey = $request->adminKey;
-                    $secretKey = "petcare@jm22";
+
                     if($adminKey == getenv('ADMIN_KEY')) {
                         $admin = new Admin;
                         $admin->name = $request->name;
@@ -141,39 +141,49 @@ class AdminController extends Controller
 
             $tokenValid = $this->validacaoJwt($request);
                 
-            switch($tokenValid) {
-                case 1:
-                    $users = User::get();
-                    return response()->json([
-                        $users
-                    ], 200);
-                    break;
-                case 2:
-                    return response()->json([
-                        "message" => "token has expired",
-                    ], 403);    
-                    break;
-                case 3:
-                    return response()->json([
-                        "message" => "invalid token",
-                    ], 403);
-                    break;
-                case 4:
-                    return response()->json([
-                        "message" => "invalid token structure"
-                    ], 403);
-                    break;
-                case 5:
-                    return response()->json([
-                        "message" => "token does not exist"
-                    ], 403);
-                    break;
-                case 6:
-                    return response()->json([
-                        "message" => "access denied"
-                    ], 404);
-                    break;
+            if($jwtPayload->adminKey == getenv('ADMIN_KEY')) {
+                switch($tokenValid) {
+                    case 1:
+                        $users = User::get();
+                        return response()->json([
+                            $users
+                        ], 200);
+                        break;
+                    case 2:
+                        return response()->json([
+                            "message" => "token has expired",
+                        ], 403);    
+                        break;
+                    case 3:
+                        return response()->json([
+                            "message" => "invalid token",
+                        ], 403);
+                        break;
+                    case 4:
+                        return response()->json([
+                            "message" => "invalid token structure"
+                        ], 403);
+                        break;
+                    case 5:
+                        return response()->json([
+                            "message" => "token does not exist"
+                        ], 403);
+                        break;
+                    case 6:
+                        return response()->json([
+                            "message" => "access denied"
+                        ], 404);
+                        break;
+                }
+            } else {
+                return response()->json([
+                    "message" => "access denied by admin key wrong"
+                ], 403);
             }
+        } else {
+            return response()->json([
+                "message" => "bad request"
+            ], 400);
         }
       
     }
@@ -192,40 +202,46 @@ class AdminController extends Controller
             $jwtPayload = json_decode($tokenPayload);
 
             $tokenValid = $this->validacaoJwt($request);
-                
-            switch($tokenValid) {
-                case 1:
-                    $admins = Admin::get();
-                    return response()->json([
-                        $admins
-                    ], 200);
-                    break;
-                case 2:
-                    return response()->json([
-                        "message" => "token has expired",
-                    ], 403);
-                    break;
-                case 3:
-                    return response()->json([
-                        "message" => "invalid token",
-                    ], 403);
-                    break;
-                case 4:
-                    return response()->json([
-                        "message" => "invalid token structure"
-                    ], 403);
-                    break;
-                case 5:
-                    return response()->json([
-                        "message" => "token does not exist"
-                    ], 403);
-                    break;
-                case 6:
-                    return response()->json([
-                        "message" => "access denied"
-                    ], 403);
-                    break;
+            
+            if(Admin::find($jwtPayload->id)->adminKey == getenv('ADMIN_KEY')) {
+                switch($tokenValid) {
+                    case 1:
+                        $admins = Admin::get();
+                        return response()->json([
+                            $admins
+                        ], 200);
+                        break;
+                    case 2:
+                        return response()->json([
+                            "message" => "token has expired",
+                        ], 403);
+                        break;
+                    case 3:
+                        return response()->json([
+                            "message" => "invalid token",
+                        ], 403);
+                        break;
+                    case 4:
+                        return response()->json([
+                            "message" => "invalid token structure"
+                        ], 403);
+                        break;
+                    case 5:
+                        return response()->json([
+                            "message" => "token does not exist"
+                        ], 403);
+                        break;
+                    case 6:
+                        return response()->json([
+                            "message" => "access denied"
+                        ], 403);
+                        break;
+                }
             }
+        } else {
+            return response()->json([
+                "message" => "bad request"
+            ], 400);
         }
       
     }
