@@ -256,9 +256,9 @@ class UserController extends Controller
                                 
                                 if (Auth::attempt($credentials)) {
                                     $user = User::find($id);
-                                    $user->name = is_null($request->name) ? $User->name : $request->name;
-                                    $user->photo = is_null($request->photo) ? $User->photo : $request->photo;
-                                    $user->password = bcrypt(is_null($request->password) ? $User->password : $request->password);
+                                    $user->name = is_null($request->name) ? $user->name : $request->name;
+                                    $user->photo = is_null($request->photo) ? $user->photo : $request->photo;
+                                    $user->password = bcrypt(is_null($request->password) ? $user->password : $request->password);
                                     $user->update();
                                     
                                     return response()->json([
@@ -340,7 +340,7 @@ class UserController extends Controller
                             if($request->adminKey == getenv('ADMIN_KEY')) {
 
                                 if(User::where('id', $id)->exists()) {
-                                    $denuncia = Denuncia::where('idUsuario', $id);
+                                    $denuncia = Denuncia::where('idUsuario', $id)->get;
                                     $denuncia->idUsuario = null;
                                     $denuncia->update();
                                     $user = User::find($id);
