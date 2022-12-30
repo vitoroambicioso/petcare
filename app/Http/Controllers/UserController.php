@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Admin;
+use App\Models\Denuncia;
 use App\Http\Controllers\AdminController;
 use Auth;
 use Session;
