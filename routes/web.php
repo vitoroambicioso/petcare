@@ -38,10 +38,10 @@ Route::post('/login', [UserController::class, 'login'])->name('user.login');
  * rotas da denuncia
  */
 Route::post('/denuncia', [DenunciaController::class, 'create'])->name('denuncia.create');
-Route::post('/denuncias', [DenunciaController::class, 'getDenuncia'])->name('denuncia.get');
+Route::post('/denuncias/{id}', [DenunciaController::class, 'getDenuncia'])->name('denuncia.get');
 Route::put('/denuncia/{id}', [DenunciaController::class, 'edit'])->name('denuncia.edit');
 Route::delete('/denuncia/{id}', [DenunciaController::class, 'delete'])->name('denuncia.delete');
-Route::get('/denuncias', [DenunciaController::class, 'getAllDenuncias']);
+Route::post('/denuncias', [DenunciaController::class, 'getAllDenuncias']);
 
 /*
  * rotas do admin
