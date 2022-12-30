@@ -144,10 +144,16 @@ class AdminController extends Controller
             if(Admin::find($jwtPayload->id)->adminKey == getenv('ADMIN_KEY')) {
                 switch($tokenValid) {
                     case 1:
-                        $users = User::get();
-                        return response()->json([
-                            $users
-                        ], 200);
+                        if(User::get()->exists()) {
+                            $users = User::get();
+                            return response()->json([
+                                $users
+                            ], 200);
+                        } else {
+                            return response()->json([
+                                "message" => "users not found"
+                            ], 404);
+                        }
                         break;
                     case 2:
                         return response()->json([
@@ -206,10 +212,16 @@ class AdminController extends Controller
             if(Admin::find($jwtPayload->id)->adminKey == getenv('ADMIN_KEY')) {
                 switch($tokenValid) {
                     case 1:
-                        $admins = Admin::get();
-                        return response()->json([
-                            $admins
-                        ], 200);
+                        if(Admin::get()->exists()) {
+                            $admins = Admin::get();
+                            return response()->json([
+                                $admins
+                            ], 200);
+                        } else {
+                            return response()->json([
+                                "message" => "admins not found"
+                            ], 404);
+                        }
                         break;
                     case 2:
                         return response()->json([

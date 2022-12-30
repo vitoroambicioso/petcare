@@ -344,7 +344,7 @@ class UserController extends Controller
                                     Denuncia::where('idUsuario', $id)->update([
                                         'idUsuario' => null,
                                     ]);
-                                    
+
                                     $user = User::find($id);
                                     $user->delete();
     

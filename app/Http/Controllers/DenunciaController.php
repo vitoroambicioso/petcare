@@ -262,10 +262,16 @@ class DenunciaController extends Controller
     
                 switch($tokenValidAdmin) {
                     case 1:
-                        $denuncias = Denuncia::get();
-                        return response()->json([
-                            $denuncias,
-                        ], 200);
+                        if(Denuncia::get()->exists()) {
+                            $denuncias = Denuncia::get();
+                            return response()->json([
+                                $denuncias,
+                            ], 200);
+                        } else {
+                            return response()->json([
+                                "message" => "denuncias not found"
+                            ], 404);
+                        }
                         break;
                             case 2:
                         return response()->json([
