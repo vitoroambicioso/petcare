@@ -135,7 +135,7 @@ class DenunciaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function getDenuncia(Request $request)
+    public function getDenuncia(Request $request, $id)
     {
         if(!empty($request->all())) {
             
@@ -154,9 +154,9 @@ class DenunciaController extends Controller
                 switch($tokenValidAdmin) {
 
                     case 1:
-                        if (Denuncia::where('idUsuario', $request->idUsuario)->exists()) {
+                        if (Denuncia::where('idUsuario', $id)->exists()) {
 
-                            $denuncia = Denuncia::where('idUsuario', $request->idUsuario)->get();
+                            $denuncia = Denuncia::where('idUsuario', $id)->get();
                                 return response()->json(
                             $denuncia, 200);
                         } else {
@@ -243,10 +243,66 @@ class DenunciaController extends Controller
         }
     }
 
-    public function getAllDenuncias()
+    public function getAllDenuncias(Request $request)
     {
-        $denuncias = Denuncia::get()->toJson(JSON_PRETTY_PRINT);
-        return response($denuncias, 200);
+
+        if(!empty($request->all())) {
+            
+            $tokenParts = explode(".", $request->token);
+            
+            $tokenHeader = base64_decode($tokenParts[0]);
+            $jwtHeader = json_decode($tokenHeader);
+            $tokenPayload = base64_decode($tokenParts[1]);
+            $jwtPayload = json_decode($tokenPayload);
+
+            if(Admin::where('email', $jwtPayload->email)->exists()) {
+
+                $isAdmin = new AdminController;
+                $tokenValidAdmin = $isAdmin->validacaoJwt($request);
+    
+                switch($tokenValidAdmin) {
+                    case 1:
+                        $denuncias = Denuncia::get();
+                        return response()->json([
+                            $denuncias,
+                        ], 200);
+                        break;
+                            case 2:
+                        return response()->json([
+                            "message" => "token has expired",
+                        ], 403);
+                        break;
+                    case 3:
+                        return response()->json([
+                            "message" => "invalid token",
+                        ], 403);
+                        break;
+                    case 4:
+                        return response()->json([
+                            "message" => "invalid token structure"
+                        ], 403);
+                        break;
+                    case 5:
+                        return response()->json([
+                            "message" => "token does not exist"
+                        ], 403);
+                        break;
+                    case 6:
+                        return response()->json([
+                            "message" => "admin not found"
+                        ], 404);
+                        break;
+                }
+            } else {
+                return response()->json([
+                    "message" => "admin not found"
+                ], 404);
+            }
+        } else {
+            return response()->json([
+                "message" => "bad request"
+            ], 400);
+        }
     }
 
     /**
