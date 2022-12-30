@@ -15,7 +15,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('denuncias', function (Blueprint $table) {
-            $table->unsignedBigInteger('idUsuario');
+            $table->unsignedBigInteger('idUsuario')->nullable();
             $table->id();
             $table->string('admin')->nullable();
             $table->string('tipo');
