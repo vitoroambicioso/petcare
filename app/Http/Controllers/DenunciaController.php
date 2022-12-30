@@ -262,8 +262,9 @@ class DenunciaController extends Controller
     
                 switch($tokenValidAdmin) {
                     case 1:
-                        if(Denuncia::get()->exists()) {
-                            $denuncias = Denuncia::get();
+                        $denuncias = Denuncia::get();
+
+                        if($denuncias->count() > 0) {
                             return response()->json([
                                 $denuncias,
                             ], 200);
