@@ -340,9 +340,11 @@ class UserController extends Controller
                             if($request->adminKey == getenv('ADMIN_KEY')) {
 
                                 if(User::where('id', $id)->exists()) {
-                                    $denuncia = Denuncia::where('idUsuario', $id)->get;
-                                    $denuncia->idUsuario = null;
-                                    $denuncia->update();
+
+                                    Denuncia::where('idUsuario', $id)->update([
+                                        'idUsuario' => null,
+                                    ]);
+                                    
                                     $user = User::find($id);
                                     $user->delete();
     
