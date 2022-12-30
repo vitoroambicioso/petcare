@@ -157,7 +157,7 @@ class DenunciaController extends Controller
                         if (Denuncia::where('idUsuario', $id)->exists()) {
 
                             $denuncia = Denuncia::where('idUsuario', $id)->get();
-                                return response()->json(
+                            return response()->json(
                             $denuncia, 200);
                         } else {
                             return response()->json([
