@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\DenunciaController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\StatusController;
 use App\Models\User;
 use App\Http\Controllers\TokenController;
 /*use App\Http\Controllers\AuthController;*/
@@ -34,6 +35,15 @@ Route::post('/usuario/{id}', [UserController::class, 'getUser'])->name('user.get
 Route::put('/usuario/{id}', [UserController::class, 'edit'])->name('user.edit');
 Route::delete('/usuario/{id}', [UserController::class, 'delete'])->name('user.delete');
 Route::post('/login', [UserController::class, 'login'])->name('user.login');
+
+/**
+ * rotas do status
+ */
+Route::post('/status', [StatusController::class, 'create'])->name('status.create');
+Route::post('/status/{id}', [StatusController::class, 'getStatus'])->name('status.get');
+Route::put('/status/{id}', [StatusController::class, 'edit'])->name('status.edit');
+Route::delete('/status/{id}', [StatusController::class, 'delete'])->name('status.delete');
+Route::post('/denunciabyid', [DenunciaController::class, 'getDenunciaById']);
 
 /*
  * rotas do admin
