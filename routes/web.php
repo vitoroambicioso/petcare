@@ -42,7 +42,7 @@ Route::post('/denuncias/{id}', [DenunciaController::class, 'getDenuncia'])->name
 Route::put('/denuncia/{id}', [DenunciaController::class, 'edit'])->name('denuncia.edit');
 Route::delete('/denuncia/{id}', [DenunciaController::class, 'delete'])->name('denuncia.delete');
 Route::post('/denuncias', [DenunciaController::class, 'getAllDenuncias']);
-Route::post('/denunciabyid', [DenunciaController::class, 'getDenunciaById']);
+Route::post('/denunciabyid/{id}', [DenunciaController::class, 'getDenunciaById']);
 
 /**
  * rotas do status

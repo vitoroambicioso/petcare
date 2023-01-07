@@ -43,7 +43,7 @@ Route::post('/status', [StatusController::class, 'create'])->name('status.create
 Route::post('/status/{id}', [StatusController::class, 'getStatus'])->name('status.get');
 Route::put('/status/{id}', [StatusController::class, 'edit'])->name('status.edit');
 Route::delete('/status/{id}', [StatusController::class, 'delete'])->name('status.delete');
-Route::post('/denunciabyid', [DenunciaController::class, 'getDenunciaById']);
+Route::post('/denunciabyid/{id}', [DenunciaController::class, 'getDenunciaById']);
 
 /*
  * rotas do admin
