@@ -31,6 +31,7 @@ class AdminController extends Controller
                         $admin = new Admin;
                         $admin->name = $request->name;
                         $admin->email = $request->email;
+                        $admin->org = $request->org;
                         $admin->photo = $request->photo;
                         $admin->adminKey = $request->adminKey;
                         $admin->password = bcrypt($request->password);
@@ -291,6 +292,7 @@ class AdminController extends Controller
                                 $admin = Admin::find($id);
                                 $admin->name = is_null($request->name) ? $admin->name : $request->name;
                                 $admin->photo = is_null($request->photo) ? $admin->photo : $request->photo;
+                                $admin->org = is_null($request->org) ? $admin->org : $request->org;
                                 $admin->password = bcrypt(is_null($request->newPassword) ? $admin->password : $request->newPassword);
                                 $admin->update();
                                 
@@ -310,6 +312,7 @@ class AdminController extends Controller
                                 $admin = Admin::find($id);
                                 $admin->name = is_null($request->name) ? $admin->name : $request->name;
                                 $admin->photo = is_null($request->photo) ? $admin->photo : $request->photo;
+                                $admin->org = is_null($request->org) ? $admin->org : $request->org;
                                 $admin->password = bcrypt(is_null($request->password) ? $admin->password : $request->password);
                                 $admin->update();
                                 

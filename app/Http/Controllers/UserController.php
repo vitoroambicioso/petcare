@@ -44,7 +44,7 @@ class UserController extends Controller
         if(!empty($request->all())) {
             
             if(User::where('email', $request->email)->exists() == FALSE) {
-
+                
                 if(Admin::where('email', $request->email)->exists() == FALSE) {
                     $user = new User;
                     $user->name = $request->name;
