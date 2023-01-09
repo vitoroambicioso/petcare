@@ -54,7 +54,7 @@ Route::delete('/status/{id}', [StatusController::class, 'delete'])->name('status
 
 /*
  * rotas do admin
-*/
+ */
 Route::post('/admin', [AdminController::class, 'create'])->name('admin.create');
 Route::post('/admin/{id}', [AdminController::class, 'getAdmin'])->name('admin.get');
 Route::put('/admin/{id}', [AdminController::class, 'edit'])->name('admin.edit');
