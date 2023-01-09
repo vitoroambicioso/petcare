@@ -20,6 +20,7 @@ class AdminFactory extends Factory
         return [
             'name' => fake()->name(),
             'email' => fake()->safeEmail(),
+            'email' => 'ong',
             'photo' => fake()->name()."png",
             'email_verified_at' => now(),
             'password' => 'password',
