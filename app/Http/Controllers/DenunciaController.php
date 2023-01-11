@@ -337,7 +337,7 @@ class DenunciaController extends Controller
     
             switch($tokenValidAdmin) {
                 case 1:
-                    if(Denuncia::find($id)->exists()) {
+                    if(Denuncia::where('id', $id)->exists()) {
                         $denuncia = Denuncia::find($id);
                         
                         return response()->json([
