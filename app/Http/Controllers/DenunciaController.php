@@ -7,6 +7,7 @@ use App\Models\Denuncia;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Admin;
+use App\Models\Status;
 use Carbon\Carbon;
 
 class DenunciaController extends Controller
@@ -57,9 +58,18 @@ class DenunciaController extends Controller
                             $denuncia->picture2 = $request->picture2;
                             $denuncia->descricao = $request->descricao;
                             $denuncia->save();
-            
+
+                            $status = new Status();
+                            $status->idDenuncia = $denuncia->id;
+                            $status->idAdmin = null;
+                            $status->admin = null;
+                            $status->org = null;
+                            $status->status = "Aguardando verificação";
+                            $status->message = null;
+                            $status->save();
+
                             return response()->json([
-                                "message" => "denuncia record created"
+                                "message" => "denuncia record created",
                             ], 201);
                         } else if(isset($request->picture3)) {
                             $denuncia = new Denuncia;
@@ -74,6 +84,15 @@ class DenunciaController extends Controller
                             $denuncia->picture3 = $request->picture3;
                             $denuncia->descricao = $request->descricao;
                             $denuncia->save();
+
+                            $status = new Status();
+                            $status->idDenuncia = $denuncia->id;
+                            $status->idAdmin = null;
+                            $status->admin = null;
+                            $status->org = null;
+                            $status->status = "Aguardando verificação";
+                            $status->message = null;
+                            $status->save();
             
                             return response()->json([
                                 "message" => "denuncia record created"
@@ -89,6 +108,15 @@ class DenunciaController extends Controller
                             $denuncia->picture1 = $request->picture1;
                             $denuncia->descricao = $request->descricao;
                             $denuncia->save();
+
+                            $status = new Status();
+                            $status->idDenuncia = $denuncia->id;
+                            $status->idAdmin = null;
+                            $status->admin = null;
+                            $status->org = null;
+                            $status->status = "Aguardando verificação";
+                            $status->message = null;
+                            $status->save();
         
                             return response()->json([
                                 "message" => "denuncia record created"
@@ -161,7 +189,7 @@ class DenunciaController extends Controller
                             $denuncia, 200);
                         } else {
                             return response()->json([
-                                "message" => "denuncia not found",
+                                "message" => "user not found",
                             ], 404);
                         }
                         break;
@@ -419,7 +447,7 @@ class DenunciaController extends Controller
                             $denuncia->update();
             
                             return response()->json([
-                                "message" => "records updated successfully by admin"
+                                "message" => "denuncia records updated successfully by admin"
                             ], 200);
                         } else {
                             return response()->json([
@@ -476,7 +504,7 @@ class DenunciaController extends Controller
                                 $denuncia->update();
                 
                                 return response()->json([
-                                    "message" => "records updated successfully"
+                                    "message" => "denuncia records updated successfully"
                                 ], 200);
                             } else {
                                 return response()->json([
