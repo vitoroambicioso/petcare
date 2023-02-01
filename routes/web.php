@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\DenunciaController;
 use App\Http\Controllers\TokenController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\StatusController;
 use App\Models\User;
 
 /*
