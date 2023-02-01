@@ -109,6 +109,73 @@ class StatusController extends Controller
                     break; 
             }
         }
-    }    
+    }
+    
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getStatus(Request $request, $id)
+    {
+        if(!empty($request->all())) {
+            
+            $tokenParts = explode(".", $request->token);
+            
+            $tokenHeader = base64_decode($tokenParts[0]);
+            $jwtHeader = json_decode($tokenHeader);
+            $tokenPayload = base64_decode($tokenParts[1]);
+            $jwtPayload = json_decode($tokenPayload);
+
+            $isAdmin = new AdminController;
+            $tokenValidAdmin = $isAdmin->validacaoJwt($request);
+
+            switch($tokenValidAdmin) {
+
+                case 1:
+                    if (Status::where('id', $id)->exists()) {
+
+                        $status = Status::find($id);
+                        return response()->json(
+                        $status, 200);
+                    } else {
+                        return response()->json([
+                            "message" => "status not found",
+                        ], 404);
+                    }
+                    break;
+                case 2:
+                    return response()->json([
+                        "message" => "token has expired",
+                    ], 403);
+                    break;
+                case 3:
+                    return response()->json([
+                        "message" => "invalid token",
+                    ], 403);
+                    break;
+                case 4:
+                    return response()->json([
+                        "message" => "invalid token structure"
+                    ], 403);
+                    break;
+                case 5:
+                    return response()->json([
+                        "message" => "token does not exist"
+                    ], 403);
+                    break;
+                case 6:
+                    return response()->json([
+                        "message" => "admin not found"
+                    ], 404);
+                    break;    
+            }
+        } else {
+            return response()->json([
+                "message" => "bad request"
+            ], 400);
+        }
+    } 
         
 }
