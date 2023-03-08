@@ -353,7 +353,7 @@ class UserController extends Controller
                                     ], 202);
                                 } else {
                                     return response()->json([
-                                        "message" => "id not found"
+                                        "message" => "user does not exist"
                                     ], 404);
                                 }
                             } else {
