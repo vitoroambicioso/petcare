@@ -403,6 +403,7 @@ class UserController extends Controller
                         if($jwtPayload->id == $id) {
 
                             if(User::where('id', $id)->exists()) {
+                                
                                 Denuncia::where('idUsuario', $id)->update([
                                     'idUsuario' => null,
                                 ]);
