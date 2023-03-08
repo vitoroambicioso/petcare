@@ -401,6 +401,11 @@ class UserController extends Controller
                             
                     case 1:
                         if($jwtPayload->id == $id) {
+
+                            Denuncia::where('idUsuario', $id)->update([
+                                'idUsuario' => null,
+                            ]);
+
                             $user = User::find($id);
                             $user->delete();
                                     
