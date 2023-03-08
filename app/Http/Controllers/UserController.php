@@ -402,21 +402,30 @@ class UserController extends Controller
                     case 1:
                         if($jwtPayload->id == $id) {
 
-                            if(User::where('id', $id)->exists()) {
+                            $credentials = ['email' => $jwtPayload->email, 'password' => $request->password];
+                            
+                            if(Auth::attempt($credentials)){
 
-                                Denuncia::where('idUsuario', $id)->update([
-                                    'idUsuario' => null,
-                                ]);
+                                if(User::where('id', $id)->exists()) {
 
-                                $user = User::find($id);
-                                $user->delete();
-                                                                    
-                                return response()->json([
-                                    "message" => "user records deleted"
-                                ], 202);
+                                    Denuncia::where('idUsuario', $id)->update([
+                                        'idUsuario' => null,
+                                    ]);
+
+                                    $user = User::find($id);
+                                    $user->delete();
+                                                                        
+                                    return response()->json([
+                                        "message" => "user records deleted"
+                                    ], 202);
+                                } else {
+                                    return response()->json([
+                                        "message" => "user does not exist"
+                                    ], 404);
+                                }
                             } else {
                                 return response()->json([
-                                    "message" => "user does not exist"
+                                    "message" => "login attempt failed"
                                 ], 404);
                             }
                         } else {
