@@ -393,7 +393,7 @@ class UserController extends Controller
                         ], 404);
                         break;
                 }
-            } else {
+            } else if(User::where('email', $jwtPayload->email)->exists()) {
 
                 $tokenValid = $this->validacaoJwt($request);
                 
@@ -403,7 +403,7 @@ class UserController extends Controller
                         if($jwtPayload->id == $id) {
 
                             if(User::where('id', $id)->exists()) {
-                                
+
                                 Denuncia::where('idUsuario', $id)->update([
                                     'idUsuario' => null,
                                 ]);
@@ -416,7 +416,7 @@ class UserController extends Controller
                                 ], 202);
                             } else {
                                 return response()->json([
-                                    "message" => "user not found"
+                                    "message" => "user does not exist"
                                 ], 404);
                             }
                         } else {
@@ -446,6 +446,10 @@ class UserController extends Controller
                         ], 403);
                         break;
                 }
+            } else {
+                return response()->json([
+                    "message" => "user does not exist"
+                ], 400);
             }
         } else {
             return response()->json([
