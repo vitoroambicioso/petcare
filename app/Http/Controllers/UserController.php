@@ -402,16 +402,22 @@ class UserController extends Controller
                     case 1:
                         if($jwtPayload->id == $id) {
 
-                            Denuncia::where('idUsuario', $id)->update([
-                                'idUsuario' => null,
-                            ]);
+                            if(User::where('id', $id)->exists()) {
+                                Denuncia::where('idUsuario', $id)->update([
+                                    'idUsuario' => null,
+                                ]);
 
-                            $user = User::find($id);
-                            $user->delete();
-                                    
-                            return response()->json([
-                                "message" => "user records deleted"
-                            ], 202);
+                                $user = User::find($id);
+                                $user->delete();
+                                                                    
+                                return response()->json([
+                                    "message" => "user records deleted"
+                                ], 202);
+                            } else {
+                                return response()->json([
+                                    "message" => "user not found"
+                                ], 404);
+                            }
                         } else {
                             return response()->json([
                                 "message" => "id not found"
